@@ -5,7 +5,7 @@
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content d-print-none">
         <div class="container-fluid">
 
             <div class="card card-solid">
@@ -320,66 +320,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
-
-
-
-    {{-- <!--/ Print -->
-    <div class="modal fade" id="frmProduct">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Products</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table id="example1" class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Code</th>
-                                <th>Product</th>
-                                <th>Amount</th>
-                                <th>Stock</th>
-                                <th class="d-print-none">#</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($products as $data)
-                                <tr>
-                                    <td>
-                                        {{ $data->code }}
-                                    </td>
-                                    <td>
-                                        {{ $data->name }}
-                                    </td>
-                                    <td>
-                                        {{ $data->price_buy }}
-                                    </td>
-                                    <td>
-
-                                    </td>
-                                    <td class="d-print-none">
-                                        <button type="button" class="btn btn-primary btn-sm"
-                                            onclick="selectProduct({{ $data }})">
-                                            Select
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer d-flex justify-content-start justify-content-md-end d-print-none">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.Print --> --}}
+    <!-- / Product Modal -->
 @endsection
 
 @section('page-style')
@@ -387,6 +328,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 @endsection
 
 @section('page-script')
@@ -395,6 +337,7 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
         $("#example1").DataTable({
@@ -406,6 +349,14 @@
             "autoWidth": false,
             "responsive": true,
         });
+
+        loadData();
+        function loadData() {
+            var msg = {!! json_encode(Session::get('message')) !!};
+            if (msg == 'create success') {
+                toastr.success(msg)
+            }
+        }
 
         document.getElementById('temps[1][code]').focus();
         selectSupplier(document.getElementById("supplier_id").value);

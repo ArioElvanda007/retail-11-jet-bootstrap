@@ -1,0 +1,1 @@
+<p class="text-center border-top p-1">Thank you</p>

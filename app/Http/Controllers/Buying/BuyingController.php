@@ -112,8 +112,8 @@ class BuyingController extends Controller
         }
 
         if (Request::get('is_print') == 0) {
-            return redirect()->route('buying.buying.create');
-        } else {
+            return redirect()->route('buying.buying.create')->with('message', 'create success');
+        } else { 
             return redirect()->route('buying.buying.print', $buying->id);
         }
     }
@@ -152,8 +152,15 @@ class BuyingController extends Controller
 
     public function print(Buying $buying)
     {
-        $query = Buying::with('buying_details', 'buying_details.products', 'suppliers', 'banks', 'users')->where('id', '=', $buying->id)->get();
+        $breadcrumbs = [
+            ['link' => "dashboard", 'name' => "Dashboard"],
+            ['link' => "buying.buying.index", 'name' => "Buying"],
+            ['link' => "buying.buying.create", 'name' => "Create Buying"], 
+            ['link' => "buying/buying/print/$buying->id", 'name' => "Print"]
+        ];
 
-        return $query;
+        $query = Buying::with('buying_details', 'buying_details.products', 'suppliers', 'banks', 'users')->where('id', '=', $buying->id)->first();
+
+        return view('content.buying.buying.print', compact('query'), ['breadcrumbs' => $breadcrumbs]);
     }
 }
