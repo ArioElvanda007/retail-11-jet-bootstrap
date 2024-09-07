@@ -48,7 +48,7 @@
                                         {{ $data->price_sell }}
                                     </td>
                                     <td>
-
+                                        {{ $data->stock }}
                                     </td>
                                     <td>
                                         {{ $data->description }}

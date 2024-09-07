@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Stock;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use App\Models\Stock\Product;
+use App\Models\Stock\Stock;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -17,7 +21,8 @@ class ProductController extends Controller
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.products.index", 'name' => "Products"]
         ];
 
-        $query = Product::get();
+        $dateFrom = Carbon::now()->format('Y-m-d');
+        $query = DB::select("CALL spStock(0, '$dateFrom')"); //Product::get();
         return view('content.stock.products.index', compact('query'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
@@ -38,12 +43,20 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        Product::create([
+        $product = Product::create([
             'code' => Request::get('code'),
             'name' => Request::get('name'),
             'price_buy' => Request::get('price_buy'),
             'price_sell' => Request::get('price_sell'),
             'description' => Request::get('description'),
+        ]);
+
+        Stock::create([
+            'prod_id' => $product->id,
+            'title' => 'create new product ' . Carbon::now(),
+            'date_input' => Carbon::now()->format('Y-m-d'),
+            'rate' => Request::get('stock'),
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('stock.products.index');         
@@ -66,13 +79,17 @@ class ProductController extends Controller
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.products.index", 'name' => "Products"], ['link' => "stock/products/edit/$product->id", 'name' => "Edit Product"]
         ];
 
+        $dateFrom = Carbon::now()->format('Y-m-d');
+        $sp = DB::select("CALL spStock($product->id, '$dateFrom')"); //Product::get();
+
         $query = [
-            'id' => $product->id,
-            'code' => $product->code,
-            'name' => $product->name,
-            'price_buy' => $product->price_buy,
-            'price_sell' => $product->price_sell,
-            'description' => $product->description,
+            'id' => $sp[0]->id,
+            'code' => $sp[0]->code,
+            'name' => $sp[0]->name,
+            'stock' => $sp[0]->stock,
+            'price_buy' => $sp[0]->price_buy,
+            'price_sell' => $sp[0]->price_sell,
+            'description' => $sp[0]->description,
         ];
         return view('content.stock.products.edit', compact('query'), ['breadcrumbs' => $breadcrumbs]);         
     }
@@ -88,6 +105,14 @@ class ProductController extends Controller
             'price_buy' => Request::get('price_buy'),
             'price_sell' => Request::get('price_sell'),
             'description' => Request::get('description'),
+        ]);
+
+        Stock::create([
+            'prod_id' => $product->id,
+            'title' => 'update product ' . Carbon::now(),
+            'date_input' => Carbon::now()->format('Y-m-d'),
+            'rate' => Request::get('stock'),
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('stock.products.index');

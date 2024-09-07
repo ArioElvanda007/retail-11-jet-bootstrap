@@ -43,7 +43,7 @@
                                     <div class="col-md-6 mt-3">
                                         <label class="form-label fs-5" for="stock">Stock (PCS)</label>
                                         <input type="number" step="any" class="form-control" id="stock"
-                                            name="stock" placeholder="Stock (PCS)" value="0" required />
+                                            name="stock" placeholder="Stock (PCS)" value="{{ $query['stock'] }}" required />
                                     </div>
 
                                     <div class="col-md-6 mt-3">
