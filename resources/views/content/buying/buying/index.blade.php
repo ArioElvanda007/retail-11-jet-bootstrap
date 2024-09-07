@@ -105,6 +105,7 @@
 @section('page-style')
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 @endsection
 
 @section('page-script')
@@ -112,6 +113,7 @@
     <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
         $("#example1").DataTable({
@@ -127,5 +129,13 @@
         function create() {
             window.location.href = "{{ route('buying.buying.create') }}";
         }
+
+        loadData();
+        function loadData() {
+            var msg = {!! json_encode(Session::get('message')) !!};
+            if (msg == 'update success') {
+                toastr.warning(msg)
+            }
+        }        
     </script>
 @endsection

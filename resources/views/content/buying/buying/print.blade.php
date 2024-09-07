@@ -10,7 +10,6 @@
 
                 <div class="row">
                     <div class="col-3">
-
                         <!-- Main content -->
                         <div class="p-3 mb-3">
                             @include('components.print.header', ['header' => 'buying', 'detail' => 'buying_details', 'party' => 'suppliers', 'party_name' => 'Supplier', 'query' => $query])

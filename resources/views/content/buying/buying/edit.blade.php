@@ -5,18 +5,23 @@
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content d-print-none">
         <div class="container-fluid">
 
             <div class="card card-solid">
-                <form class="form" action="{{ route('buying.buying.store') }}" method="POST">
+                <form class="form" action="{{ route('buying.buying.update', $query->id) }}" method="POST">
                     @csrf
 
                     <div class="card-body">
                         <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
-                            {{-- <button type="button" onclick='print()' class="btn btn-dark mr-2">
+                            <button type="button" onclick='printData({{ $query->id }})' class="btn btn-dark mr-2">
                                 <i class="fa fa-print"></i>
-                            </button> --}}
+                            </button>
+
+                            <button type="button" onclick='deleteData({{ $query->id }})' class="btn btn-danger mr-2">
+                                <i class="fa fa-trash"></i>
+                                <span class="ms-2">Delete</span>
+                            </button>
 
                             <button type="button" onclick='backToList()' class="btn btn-dark">
                                 <i class="fa fa-share"></i>
@@ -31,18 +36,18 @@
                                     <div class="col-md-4">
                                         <label class="form-label fs-5" for="code">PO Number</label>
                                         <input type="text" class="form-control" id="code" name="code"
-                                            placeholder="code" value="{{ $po }}" disabled required />
+                                            placeholder="code" value="{{ $query->code }}" disabled required />
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fs-5" for="date_input">Date Input</label>
                                         <input type="date" class="form-control" id="date_input" name="date_input"
-                                            placeholder="Date Input" value="{{ date('Y-m-d', strtotime($date_input)) }}"
-                                            required />
+                                            placeholder="Date Input"
+                                            value="{{ date('Y-m-d', strtotime($query->date_input)) }}" required />
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fs-5" for="due_date">Due Date</label>
                                         <input type="date" class="form-control" id="due_date" name="due_date"
-                                            placeholder="Due Date" value="{{ date('Y-m-d', strtotime($due_date)) }}"
+                                            placeholder="Due Date" value="{{ date('Y-m-d', strtotime($query->due_date)) }}"
                                             required />
                                     </div>
                                 </div>
@@ -54,7 +59,8 @@
                                         <select onchange="selectSupplier(this.value)" class="form-control supplierSelect2"
                                             name="supplier_id" id="supplier_id" required>
                                             @foreach ($suppliers as $data)
-                                                <option value="{{ $data->id }}">
+                                                <option value="{{ $data->id }}"
+                                                    @if ($query->supplier_id == $data->id) selected @endif>
                                                     {{ $data->name }}</option>
                                             @endforeach
                                         </select>
@@ -71,9 +77,10 @@
                                     <div class="col-md-12">
                                         <label class="form-label fs-5" for="title">Title</label>
                                         <input type="text" class="form-control" id="title" name="title"
-                                            placeholder="title" value="" />
+                                            placeholder="title" value="{{ $query->title }}" />
                                     </div>
                                 </div>
+
 
 
 
@@ -101,56 +108,161 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="use-tBody">
-                                                <tr class="rowCount" id="rowCount_1">
+                                                @php
+                                                    $iNum = 0;
+                                                @endphp
+
+                                                @foreach ($query->buying_details as $data)
+                                                    <tr class="rowCount" id="rowCount_{{ $loop->iteration }}">
+                                                        <th scope="row" hidden>
+                                                            <input type="text" class="form-control"
+                                                                id="temps[{{ $loop->iteration }}][id]"
+                                                                name="temps[{{ $loop->iteration }}][id]" placeholder="id"
+                                                                value="{{ $data->products->id }}" />
+                                                        </th>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                onkeyup="handleEvt(event,this, {{ $loop->iteration }})"
+                                                                id="temps[{{ $loop->iteration }}][code]"
+                                                                name="temps[{{ $loop->iteration }}][code]"
+                                                                placeholder="Code" value="{{ $data->products->code }}" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                id="temps[{{ $loop->iteration }}][name]"
+                                                                name="temps[{{ $loop->iteration }}][name]"
+                                                                placeholder="Product Name"
+                                                                value="{{ $data->products->name }}" disabled />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" step="any"
+                                                                class="form-control amount"
+                                                                id="temps[{{ $loop->iteration }}][amount]"
+                                                                name="temps[{{ $loop->iteration }}][amount]"
+                                                                placeholder="Amount" value="{{ $data->amount }}"
+                                                                onkeyup="calculateChange({{ $loop->iteration }})"
+                                                                required />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" step="any"
+                                                                class="form-control rate"
+                                                                id="temps[{{ $loop->iteration }}][rate]"
+                                                                name="temps[{{ $loop->iteration }}][rate]"
+                                                                placeholder="Rate" value="{{ $data->rate }}"
+                                                                onkeyup="calculateChange({{ $loop->iteration }})"
+                                                                required />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" step="any"
+                                                                class="form-control total"
+                                                                id="temps[{{ $loop->iteration }}][total]"
+                                                                name="temps[{{ $loop->iteration }}][total]"
+                                                                placeholder="Total"
+                                                                value="{{ $data->rate * $data->amount }}" disabled />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" step="any"
+                                                                class="form-control discount"
+                                                                id="temps[{{ $loop->iteration }}][discount]"
+                                                                name="temps[{{ $loop->iteration }}][discount]"
+                                                                placeholder="Discount" value="{{ $data->discount }}"
+                                                                onkeyup="calculateChange({{ $loop->iteration }})"
+                                                                required />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" step="any"
+                                                                class="form-control subtotal"
+                                                                id="temps[{{ $loop->iteration }}][subtotal]"
+                                                                name="temps[{{ $loop->iteration }}][subtotal]"
+                                                                placeholder="Subtotal"
+                                                                value="{{ $data->rate * $data->amount - $data->discount }}"
+                                                                disabled />
+                                                        </td>
+                                                        <td class="d-print-none">
+                                                            <button type="button" class="btn btn-danger"
+                                                                id="btnDelete_{{ $loop->iteration }}"
+                                                                name="btnDelete_{{ $loop->iteration }}"
+                                                                onclick="deleteRow(event)">
+                                                                X
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                                    @php
+                                                        $iNum = $loop->iteration + 1;
+                                                    @endphp
+                                                @endforeach
+
+                                                {{ $iNum }}
+                                                
+                                                <!-- new record -->
+                                                <tr class="rowCount" id="rowCount_{{ $iNum }}">
                                                     <th scope="row" hidden>
-                                                        <input type="text" class="form-control" id="temps[1][id]"
-                                                            name="temps[1][id]" placeholder="id" value="" />
+                                                        <input type="text" class="form-control" id="temps[{{ $iNum }}][id]"
+                                                            name="temps[{{ $iNum }}][id]" placeholder="id"
+                                                            value="" />
                                                     </th>
                                                     <td>
                                                         <input type="text" class="form-control"
-                                                            onkeyup="handleEvt(event,this, 1)" id="temps[1][code]"
-                                                            name="temps[1][code]" placeholder="Code" value="" />
+                                                            onkeyup="handleEvt(event,this, {{ $iNum }})"
+                                                            id="temps[{{ $iNum }}][code]"
+                                                            name="temps[{{ $iNum }}][code]"
+                                                            placeholder="Code" value="" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" id="temps[1][name]"
-                                                            name="temps[1][name]" placeholder="Product Name"
-                                                            value="" disabled />
+                                                        <input type="text" class="form-control"
+                                                            id="temps[{{ $iNum }}][name]"
+                                                            name="temps[{{ $iNum }}][name]"
+                                                            placeholder="Product Name" value="" disabled />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control amount"
-                                                            id="temps[1][amount]" name="temps[1][amount]"
+                                                            id="temps[{{ $iNum }}][amount]"
+                                                            name="temps[{{ $iNum }}][amount]"
                                                             placeholder="Amount" value="0"
-                                                            onkeyup="calculateChange(1)" required />
+                                                            onkeyup="calculateChange({{ $iNum }})"
+                                                            required />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control rate"
-                                                            id="temps[1][rate]" name="temps[1][rate]" placeholder="Rate"
-                                                            value="1" onkeyup="calculateChange(1)" required />
+                                                            id="temps[{{ $iNum }}][rate]"
+                                                            name="temps[{{ $iNum }}][rate]"
+                                                            placeholder="Rate" value="1"
+                                                            onkeyup="calculateChange({{ $iNum }})"
+                                                            required />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control total"
-                                                            id="temps[1][total]" name="temps[1][total]"
+                                                            id="temps[{{ $iNum }}][total]"
+                                                            name="temps[{{ $iNum }}][total]"
                                                             placeholder="Total" value="0" disabled />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any"
-                                                            class="form-control discount" id="temps[1][discount]"
-                                                            name="temps[1][discount]" placeholder="Discount"
-                                                            value="0" onkeyup="calculateChange(1)" required />
+                                                            class="form-control discount"
+                                                            id="temps[{{ $iNum }}][discount]"
+                                                            name="temps[{{ $iNum }}][discount]"
+                                                            placeholder="Discount" value="0"
+                                                            onkeyup="calculateChange({{ $iNum }})"
+                                                            required />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any"
-                                                            class="form-control subtotal" id="temps[1][subtotal]"
-                                                            name="temps[1][subtotal]" placeholder="Subtotal"
-                                                            value="0" disabled />
+                                                            class="form-control subtotal"
+                                                            id="temps[{{ $iNum }}][subtotal]"
+                                                            name="temps[{{ $iNum }}][subtotal]"
+                                                            placeholder="Subtotal" value="0" disabled />
                                                     </td>
                                                     <td class="d-print-none">
-                                                        <button type="button" class="btn btn-danger" id="btnDelete_1"
-                                                            name="btnDelete_1" onclick="deleteRow(event)">
+                                                        <button type="button" class="btn btn-danger"
+                                                            id="btnDelete_{{ $iNum }}"
+                                                            name="btnDelete_{{ $iNum }}"
+                                                            onclick="deleteRow(event)">
                                                             X
                                                         </button>
                                                     </td>
                                                 </tr>
+
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -158,23 +270,24 @@
                                                     <td>
                                                         <input type="number" step="any" class="form-control"
                                                             id="rateTotal" name="rateTotal" placeholder="Rate"
-                                                            value="0" disabled />
+                                                            value="{{ $query->rate }}" disabled />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control"
                                                             id="totalTotal" name="totalTotal" placeholder="Total"
-                                                            value="0" disabled />
+                                                            value="{{ $query->subtotal }}" disabled />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control"
                                                             id="discountTotal" name="discountTotal"
-                                                            placeholder="Discount" value="0"
+                                                            placeholder="Discount" value="{{ $query->discount }}"
                                                             onkeyup="calculateGrandTotal()" />
                                                     </td>
                                                     <td>
                                                         <input type="number" step="any" class="form-control"
                                                             id="subtotalTotal" name="subtotalTotal"
-                                                            placeholder="SubTotal" value="0" disabled />
+                                                            placeholder="SubTotal"
+                                                            value="{{ $query->subtotal - $query->discount }}" disabled />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -193,15 +306,20 @@
                                         <ul class="profile-username list-group list-group-unbordered mb-3">
                                             <li>
                                                 <b>Grand Total</b>
-                                                <h3 class="float-right" id="lblgrandtotal" name="lblgrandtotal">0</h3>
+                                                <h3 class="float-right" id="lblgrandtotal" name="lblgrandtotal">
+                                                    {{ number_format($query->subtotal - $query->discount, 2, '.', ',') }}
+                                                </h3>
                                             </li>
                                             <li>
                                                 <b>Payment</b>
-                                                <h3 class="float-right" id="lblpay" name="lblpay">0</h3>
+                                                <h3 class="float-right" id="lblpay" name="lblpay">
+                                                    {{ number_format($query->pay, 2, '.', ',') }}</h3>
                                             </li>
                                             <li>
                                                 <b>Return</b>
-                                                <h3 class="float-right" id="lblreturn" name="lblreturn">0</h3>
+                                                <h3 class="float-right" id="lblreturn" name="lblreturn">
+                                                    {{ number_format($query->pay - ($query->subtotal - $query->discount), 2, '.', ',') }}
+                                                </h3>
                                             </li>
                                         </ul>
 
@@ -209,19 +327,22 @@
                                             <li class="list-group-item">
                                                 <b>GrandTotal</b> <a class="float-right"><input type="number"
                                                         step="any" class="form-control" id="grandtotal"
-                                                        name="grandtotal" placeholder="GrandTotal" value="0"
-                                                        disabled required /></a>
+                                                        name="grandtotal" placeholder="GrandTotal"
+                                                        value="{{ $query->subtotal - $query->discount }}" disabled
+                                                        required /></a>
                                             </li>
                                             <li class="list-group-item">
                                                 <b>Payment</b> <a class="float-right"><input type="number"
                                                         step="any" class="form-control" id="pay"
-                                                        name="pay" placeholder="Payment" value="0" required
-                                                        onkeyup="calculateGrandTotal()" /></a>
+                                                        name="pay" placeholder="Payment" value="{{ $query->pay }}"
+                                                        required onkeyup="calculateGrandTotal()" /></a>
                                             </li>
                                             <li class="list-group-item">
                                                 <b>Return</b> <a class="float-right"><input type="number" step="any"
                                                         class="form-control" id="return" name="return"
-                                                        placeholder="Return" value="0" disabled required /></a>
+                                                        placeholder="Return"
+                                                        value="{{ $query->pay - ($query->subtotal - $query->discount) }}"
+                                                        disabled required /></a>
                                             </li>
                                             <li class="list-group-item">
                                                 <b class="mb-2">Methode :</b>
@@ -229,7 +350,8 @@
                                                     name="bank_id" id="bank_id" required>
                                                     <option value="0" selected="selected">On Hand</option>
                                                     @foreach ($banks as $data)
-                                                        <option value="{{ $data->id }}">
+                                                        <option value="{{ $data->id }}"
+                                                            @if ($query->bank_id == $data->id) selected @endif>
                                                             {{ $data->account_name }}</option>
                                                     @endforeach
                                                 </select>
@@ -247,7 +369,8 @@
                                                 <i class="fa fa-save"></i>
                                                 <span class="ms-2">Save</span>
                                             </button>
-                                            <button type="button" onclick='cancelTrans()' class="btn btn-dark">
+                                            <button type="button" onclick='cancelTrans({{ $query->id }})'
+                                                class="btn btn-dark">
                                                 <i class="fa fa-refresh"></i>
                                                 <span class="ms-2">Cancel</span>
                                             </button>
@@ -269,6 +392,7 @@
 
 
 
+    <!--/ Product Modal -->
     <div class="modal fade" id="frmProduct">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -305,11 +429,7 @@
 
                                     </td>
                                     <td class="d-print-none">
-                                        {{-- <a href="{{ route('stock.products.edit', $data->id) }}">
-                                            <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Select</span>
-                                        </a> --}}
-
-                                        <button type="button" class="btn btn-primary"
+                                        <button type="button" class="btn btn-primary btn-sm"
                                             onclick="selectProduct({{ $data }})">
                                             Select
                                         </button>
@@ -327,8 +447,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
-    <!--/ Product Modal -->
+    <!-- / Product Modal -->
 @endsection
 
 @section('page-style')
@@ -336,6 +455,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 @endsection
 
 @section('page-script')
@@ -344,6 +464,7 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
         $("#example1").DataTable({
@@ -387,9 +508,25 @@
             window.location.href = "{{ route('buying.buying.index') }}";
         }
 
-        function cancelTrans() {
-            window.location.href = "{{ route('buying.buying.create') }}";
+        function cancelTrans(id) {
+            var url = "{{ route('buying.buying.edit', [':id']) }}";
+            url = url.replace(':id', id);
+            location.href = url;
         }
+
+        function deleteData(id) {
+            if (confirm('Are you sure?')) {
+                var url = "{{ route('buying.buying.destroy', [':id']) }}";
+                url = url.replace(':id', id);
+                location.href = url;                
+            }
+        } 
+        
+        function printData(id) {
+            var url = "{{ route('buying.buying.print', [':id']) }}";
+            url = url.replace(':id', id);
+            location.href = url;                
+        }         
 
         $("#btnProduct").click(function() {
             $('#frmProduct').modal('toggle')
@@ -433,7 +570,7 @@
             if (total_element > 0) {
                 var lastid = $(".rowCount:last").attr("id");
                 var split_id = lastid.split("_");
-                rows = Number(split_id[1]);// + 1;
+                rows = Number(split_id[1]); // + 1;
             }
 
             document.getElementById('temps[' + rows + '][code]').value = data['code'];
