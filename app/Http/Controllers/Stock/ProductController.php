@@ -53,7 +53,7 @@ class ProductController extends Controller
 
         Stock::create([
             'prod_id' => $product->id,
-            'title' => 'create new product ' . Carbon::now(),
+            'title' => 'create new product',
             'date_input' => Carbon::now()->format('Y-m-d'),
             'rate' => Request::get('stock'),
             'user_id' => Auth::user()->id,

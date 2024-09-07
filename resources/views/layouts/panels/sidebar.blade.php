@@ -104,13 +104,23 @@
                                     class="nav-link {{ request()->routeIs('stock.stocks.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-cubes"></i>
                                     <p>
-                                        Stocks
+                                        Adjustment
                                     </p>
                                 </a>
                             </li>
                         @endcan    
 
-
+                        @can('manage accounting')
+                            <li class="nav-item">
+                                <a href="{{ route('accounting.cashflows.index') }}"
+                                    class="nav-link {{ request()->routeIs('accounting.cashflows.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-eur"></i>
+                                    <p>
+                                        Cashflows
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan    
 
 
 

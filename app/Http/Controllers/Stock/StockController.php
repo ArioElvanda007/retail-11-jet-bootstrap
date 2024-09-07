@@ -18,7 +18,7 @@ class StockController extends Controller
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "stock.stocks.index", 'name' => "Stocks"]
+            ['link' => "stock.stocks.index", 'name' => "Adjustments"]
         ];
 
         if (Request::get("date_from")) {
@@ -40,8 +40,8 @@ class StockController extends Controller
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "stock.stocks.index", 'name' => "Stocks"],
-            ['link' => "stock.stocks.create", 'name' => "Create Stock"]
+            ['link' => "stock.stocks.index", 'name' => "Adjustments"],
+            ['link' => "stock.stocks.create", 'name' => "Create Adjustment"]
         ];
 
         $date_input = Carbon::now();
@@ -85,7 +85,7 @@ class StockController extends Controller
     public function edit(Stock $stock)
     {
         $breadcrumbs = [
-            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.stocks.index", 'name' => "Stocks"], ['link' => "stock/stocks/edit/$stock->id", 'name' => "Edit Stocks"]
+            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.stocks.index", 'name' => "Adjustments"], ['link' => "stock/stocks/edit/$stock->id", 'name' => "Edit Adjustment"]
         ];
 
         $query = Stock::with('products', 'users')->where('id', '=', $stock->id)->first();

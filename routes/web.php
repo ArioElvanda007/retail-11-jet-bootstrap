@@ -30,6 +30,7 @@ use App\Http\Controllers\Selling\CustomerController;
 use App\Http\Controllers\Selling\SellingController;
 
 use App\Http\Controllers\Accounting\BankController;
+use App\Http\Controllers\Accounting\CashFlowController;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
@@ -111,6 +112,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{bank}', [BankController::class, 'edit'])->name('edit');
             Route::post('{bank}', [BankController::class, 'update'])->name('update');
             Route::get('{bank}', [BankController::class, 'destroy'])->name('destroy');
+        });     
+
+        Route::prefix('cashflows')->name('cashflows.')->group(function () {
+            Route::get('/', [CashFlowController::class, 'index'])->name('index');
+            Route::get('/create', [CashFlowController::class, 'create'])->name('create');
+            Route::post('/', [CashFlowController::class, 'store'])->name('store');
+            Route::get('/edit/{cashflow}', [CashFlowController::class, 'edit'])->name('edit');
+            Route::post('{cashflow}', [CashFlowController::class, 'update'])->name('update');
+            Route::get('{cashflow}', [CashFlowController::class, 'destroy'])->name('destroy');
         });     
     });
 
