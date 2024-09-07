@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('global')->group(function () {
     Route::get('select-supplier/{supplier}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectSupplier']);
+    Route::get('select-customer/{customer}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectCustomer']);
     Route::get('select-product-id/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductID']);
     Route::get('select-product-code/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductCode']);
 });

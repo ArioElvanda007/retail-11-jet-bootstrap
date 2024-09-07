@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Buying;
+namespace App\Http\Controllers\Selling;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
-use App\Models\Buying\Buying;
-use App\Models\Buying\BuyingDetail;
-use App\Models\Buying\Supplier;
+use App\Models\Selling\Selling;
+use App\Models\Selling\SellingDetail;
+use App\Models\Selling\Customer;
 use App\Models\Accounting\Bank;
 use App\Models\Stock\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class BuyingController extends Controller
+class SellingController extends Controller
 {
     private function GenerateCode()
     {
-        $result = Buying::whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))->count() + 1;
-        $result = "PO-" . Carbon::now()->format('ymd') . "-" . substr("0000{$result}", -4);
+        $result = Selling::whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))->count() + 1;
+        $result = "SO-" . Carbon::now()->format('ymd') . "-" . substr("0000{$result}", -4);
 
         return $result;
     }
-
 
 
     /**
@@ -31,7 +30,7 @@ class BuyingController extends Controller
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "buying.buying.index", 'name' => "Buying"]
+            ['link' => "selling.selling.index", 'name' => "Selling"]
         ];
 
         if (Request::get("date_from")) {
@@ -42,8 +41,8 @@ class BuyingController extends Controller
             $date_to = Carbon::now();
         }
 
-        $query = Buying::with('suppliers', 'banks', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
-        return view('content.buying.buying.index', compact('query', 'date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);
+        $query = Selling::with('customers', 'banks', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
+        return view('content.selling.selling.index', compact('query', 'date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**
@@ -53,19 +52,19 @@ class BuyingController extends Controller
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "buying.buying.index", 'name' => "Buying"],
-            ['link' => "buying.buying.create", 'name' => "Create Buying"]
+            ['link' => "selling.selling.index", 'name' => "Selling"],
+            ['link' => "selling.selling.create", 'name' => "Create Selling"]
         ];
 
         $invoice = $this->GenerateCode();
         $date_input = Carbon::now();
         $due_date = Carbon::now()->addDays(3);
 
-        $suppliers = Supplier::get();
+        $customers = Customer::get();
         $banks = Bank::get();
         $products = Product::get();
 
-        return view('content.buying.buying.create', compact('invoice', 'date_input', 'due_date', 'suppliers', 'banks', 'products'), ['breadcrumbs' => $breadcrumbs]);
+        return view('content.selling.selling.create', compact('invoice', 'date_input', 'due_date', 'customers', 'banks', 'products'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**
@@ -84,7 +83,7 @@ class BuyingController extends Controller
             }
         }
 
-        $buying = Buying::create([
+        $selling = Selling::create([
             'code' => $code,
             'title' => Request::get('title'),
             'date_input' => Request::get('date_input'),
@@ -93,15 +92,15 @@ class BuyingController extends Controller
             'subtotal' => $subtotal,
             'discount' => Request::get('discountTotal'),
             'pay' => Request::get('pay'),
-            'supplier_id' => Request::get('supplier_id'),
+            'customer_id' => Request::get('customer_id'),
             'bank_id' => Request::get('bank_id'),
             'user_id' => Auth::user()->id,
         ]);
 
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
-                BuyingDetail::create([
-                    'buying_id' => $buying->id,
+                SellingDetail::create([
+                    'selling_id' => $selling->id,
                     'prod_id' => $value['id'],
                     'rate' => $value['rate'],
                     'amount' => $value['amount'],
@@ -111,10 +110,10 @@ class BuyingController extends Controller
         }
 
         if (Request::get('is_print') == 0) {
-            return redirect()->route('buying.buying.create')->with('message', 'create success');
+            return redirect()->route('selling.selling.create')->with('message', 'create success');
         } else { 
-            return redirect()->route('buying.buying.print', $buying->id);
-        }
+            return redirect()->route('selling.selling.print', $selling->id);
+        }        
     }
 
     /**
@@ -128,27 +127,27 @@ class BuyingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Buying $buying)
+    public function edit(Selling $selling)
     {
         $breadcrumbs = [
-            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "buying.buying.index", 'name' => "Buying"], ['link' => "buying/buying/edit/$buying->id", 'name' => "Edit Buying"]
+            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "selling.selling.index", 'name' => "Selling"], ['link' => "selling/selling/edit/$selling->id", 'name' => "Edit Selling"]
         ];
 
-        $query = Buying::with('buying_details', 'buying_details.products', 'suppliers', 'banks', 'users')->where('id', '=', $buying->id)->first();
+        $query = Selling::with('selling_details', 'selling_details.products', 'customers', 'banks', 'users')->where('id', '=', $selling->id)->first();
 
-        $suppliers = Supplier::get();
+        $customers = Customer::get();
         $banks = Bank::get();
         $products = Product::get();
 
         // dd($query);
 
-        return view('content.buying.buying.edit', compact('query', 'suppliers', 'banks', 'products'), ['breadcrumbs' => $breadcrumbs]);         
+        return view('content.selling.selling.edit', compact('query', 'customers', 'banks', 'products'), ['breadcrumbs' => $breadcrumbs]);                 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Buying $buying, Request $request)
+    public function update(Selling $selling, Request $request)
     {
         $rate = 0;
         $subtotal = 0;
@@ -159,7 +158,7 @@ class BuyingController extends Controller
             }
         }
 
-        $buying->update([
+        $selling->update([
             'title' => Request::get('title'),
             'date_input' => Request::get('date_input'),
             'due_date' => Request::get('due_date'),
@@ -167,16 +166,16 @@ class BuyingController extends Controller
             'subtotal' => $subtotal,
             'discount' => Request::get('discountTotal'),
             'pay' => Request::get('pay'),
-            'supplier_id' => Request::get('supplier_id'),
+            'customer_id' => Request::get('customer_id'),
             'bank_id' => Request::get('bank_id'),
             'user_id' => Auth::user()->id,
         ]);
 
-        BuyingDetail::where('buying_id', '=', $buying->id)->delete();
+        SellingDetail::where('selling_id', '=', $selling->id)->delete();
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
-                BuyingDetail::create([
-                    'buying_id' => $buying->id,
+                SellingDetail::create([
+                    'selling_id' => $selling->id,
                     'prod_id' => $value['id'],
                     'rate' => $value['rate'],
                     'amount' => $value['amount'],
@@ -186,34 +185,34 @@ class BuyingController extends Controller
         }
 
         if (Request::get('is_print') == 0) {
-            return redirect()->route('buying.buying.index')->with('message', 'update success');
+            return redirect()->route('selling.selling.index')->with('message', 'update success');
         } else { 
-            return redirect()->route('buying.buying.print', $buying->id);
-        }        
+            return redirect()->route('selling.selling.print', $selling->id);
+        }          
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Buying $buying)
+    public function destroy(Selling $selling)
     {
-        $buying->delete();
-        BuyingDetail::where('buying_id', '=', $buying->id)->delete();
+        $selling->delete();
+        SellingDetail::where('selling_id', '=', $selling->id)->delete();
         
-        return redirect()->route('buying.buying.index')->with('message', 'delete success');
+        return redirect()->route('selling.selling.index')->with('message', 'delete success');        
     }
 
-    public function print(Buying $buying)
+    public function print(Selling $selling)
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "buying.buying.index", 'name' => "Buying"],
-            ['link' => "buying.buying.create", 'name' => "Create Buying"], 
-            ['link' => "buying/buying/print/$buying->id", 'name' => "Print"]
+            ['link' => "selling.selling.index", 'name' => "Selling"],
+            ['link' => "selling.selling.create", 'name' => "Create Selling"], 
+            ['link' => "selling/selling/print/$selling->id", 'name' => "Print"]
         ];
 
-        $query = Buying::with('buying_details', 'buying_details.products', 'suppliers', 'banks', 'users')->where('id', '=', $buying->id)->first();
+        $query = selling::with('selling_details', 'selling_details.products', 'customers', 'banks', 'users')->where('id', '=', $selling->id)->first();
 
-        return view('content.buying.buying.print', compact('query'), ['breadcrumbs' => $breadcrumbs]);
-    }
+        return view('content.selling.selling.print', compact('query'), ['breadcrumbs' => $breadcrumbs]);
+    }    
 }

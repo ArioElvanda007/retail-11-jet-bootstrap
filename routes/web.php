@@ -25,6 +25,8 @@ use App\Http\Controllers\Buying\SupplierController;
 use App\Http\Controllers\Buying\BuyingController;
 
 use App\Http\Controllers\Selling\CustomerController;
+use App\Http\Controllers\Selling\SellingController;
+
 use App\Http\Controllers\Accounting\BankController;
 
 use App\Http\Controllers\Admin\UserController;
@@ -77,6 +79,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{customer}', [CustomerController::class, 'edit'])->name('edit');
             Route::post('{customer}', [CustomerController::class, 'update'])->name('update');
             Route::get('{customer}', [CustomerController::class, 'destroy'])->name('destroy');
+        });     
+
+        Route::prefix('selling')->name('selling.')->group(function () {
+            Route::get('/', [SellingController::class, 'index'])->name('index');
+            Route::get('/create', [SellingController::class, 'create'])->name('create');
+            Route::post('/', [SellingController::class, 'store'])->name('store');
+            Route::get('/edit/{selling}', [SellingController::class, 'edit'])->name('edit');
+            Route::post('{selling}', [SellingController::class, 'update'])->name('update');
+            Route::get('{selling}', [SellingController::class, 'destroy'])->name('destroy');
+            Route::get('/print/{selling}', [SellingController::class, 'print'])->name('print');
         });     
     });
 

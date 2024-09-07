@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Buying\Supplier;
+use App\Models\Selling\Customer;
 use App\Models\Stock\Product;
 
 class GlobalAPIController extends Controller
@@ -19,6 +20,21 @@ class GlobalAPIController extends Controller
             'email' => $supplier->email,
             'telephone' => $supplier->telephone,
             'description' => $supplier->description,
+        ];
+
+        return response()->json($query);
+    }
+
+    public function selectCustomer(Customer $customer)
+    {
+        $query = [
+            'id' => $customer->id,
+            'code' => $customer->code,
+            'name' => $customer->name,
+            'address' => $customer->address,
+            'email' => $customer->email,
+            'telephone' => $customer->telephone,
+            'description' => $customer->description,
         ];
 
         return response()->json($query);

@@ -9,7 +9,7 @@
         <div class="container-fluid">
 
             <div class="card card-solid">
-                <form class="form" action="{{ route('buying.buying.store') }}" method="POST">
+                <form class="form" action="{{ route('selling.selling.store') }}" method="POST">
                     @csrf
 
                     <div class="card-body">
@@ -25,7 +25,7 @@
                                 <!--hader po & date -->
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="form-label fs-5" for="code">PO Number</label>
+                                        <label class="form-label fs-5" for="code">SO Number</label>
                                         <input type="text" class="form-control" id="code" name="code"
                                             placeholder="code" value="{{ $invoice }}" disabled required />
                                     </div>
@@ -43,22 +43,22 @@
                                     </div>
                                 </div>
 
-                                <!--supplier -->
+                                <!--customer -->
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="form-label fs-5" for="supplier_id">Supplier</label>
-                                        <select onchange="selectSupplier(this.value)" class="form-control supplierSelect2"
-                                            name="supplier_id" id="supplier_id" required>
-                                            @foreach ($suppliers as $data)
+                                        <label class="form-label fs-5" for="customer_id">customer</label>
+                                        <select onchange="selectcustomer(this.value)" class="form-control customerSelect2"
+                                            name="customer_id" id="customer_id" required>
+                                            @foreach ($customers as $data)
                                                 <option value="{{ $data->id }}">
                                                     {{ $data->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-8">
-                                        <label class="form-label fs-5" for="infoSupplier">Infomation or Supplier</label>
-                                        <input type="text" class="form-control" id="infoSupplier" name="infoSupplier"
-                                            placeholder="infomation of Supplier" value="" disabled />
+                                        <label class="form-label fs-5" for="infocustomer">Infomation or customer</label>
+                                        <input type="text" class="form-control" id="infocustomer" name="infocustomer"
+                                            placeholder="infomation of customer" value="" disabled />
                                     </div>
                                 </div>
 
@@ -359,7 +359,7 @@
         }
 
         document.getElementById('temps[1][code]').focus();
-        selectSupplier(document.getElementById("supplier_id").value);
+        selectcustomer(document.getElementById("customer_id").value);
 
         // disable textbox enter type text (handle submit)
         $(document).on('keyup keypress', 'form input[type="text"]', function(e) {
@@ -377,7 +377,7 @@
             }
         });
 
-        $('.supplierSelect2').select2({
+        $('.customerSelect2').select2({
             theme: 'bootstrap4'
         })
 
@@ -386,35 +386,35 @@
         })
 
         function backToList() {
-            window.location.href = "{{ route('buying.buying.index') }}";
+            window.location.href = "{{ route('selling.selling.index') }}";
         }
 
         function cancelTrans() {
-            window.location.href = "{{ route('buying.buying.create') }}";
+            window.location.href = "{{ route('selling.selling.create') }}";
         }
 
         $("#btnProduct").click(function() {
             $('#frmProduct').modal('toggle')
         });
 
-        function selectSupplier(value) {
+        function selectcustomer(value) {
             if (value) {
                 $.ajax({
                     dataType: 'json',
                     type: "GET",
-                    url: '{{ env('APP_URL') }}' + "/api/global/select-supplier/" + value,
+                    url: '{{ env('APP_URL') }}' + "/api/global/select-customer/" + value,
 
                     success: function(res) {
                         if (res) {
-                            document.getElementById('infoSupplier').value = res.address + ', Telp: ' + res
+                            document.getElementById('infocustomer').value = res.address + ', Telp: ' + res
                                 .telephone;
                         } else {
-                            document.getElementById('infoSupplier').value = "";
+                            document.getElementById('infocustomer').value = "";
                         }
                     }
                 });
             } else {
-                document.getElementById('infoSupplier').value = "";
+                document.getElementById('infocustomer').value = "";
             }
         }
 

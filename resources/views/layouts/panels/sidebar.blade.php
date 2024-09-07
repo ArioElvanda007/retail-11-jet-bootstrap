@@ -86,6 +86,18 @@
                             </li>
                         @endcan
 
+                        @can('manage selling')
+                            <li class="nav-item">
+                                <a href="{{ route('selling.selling.index') }}"
+                                    class="nav-link {{ request()->routeIs('selling.selling.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-coffee"></i>
+                                    <p>
+                                        Selling
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan                        
+
 
 
 
