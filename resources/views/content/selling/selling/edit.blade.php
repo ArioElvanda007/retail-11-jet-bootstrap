@@ -192,8 +192,6 @@
                                                         $iNum = $loop->iteration + 1;
                                                     @endphp
                                                 @endforeach
-
-                                                {{ $iNum }}
                                                 
                                                 <!-- new record -->
                                                 <tr class="rowCount" id="rowCount_{{ $iNum }}">
@@ -423,7 +421,7 @@
                                         {{ $data->name }}
                                     </td>
                                     <td>
-                                        {{ $data->price_buy }}
+                                        {{ $data->price_sell }}
                                     </td>
                                     <td>
 
@@ -589,11 +587,11 @@
                             if (res.id != undefined) {
                                 document.getElementById('temps[' + index + '][id]').value = res.id;
                                 document.getElementById('temps[' + index + '][name]').value = res.name;
-                                document.getElementById('temps[' + index + '][amount]').value = res.price_buy;
+                                document.getElementById('temps[' + index + '][amount]').value = res.price_sell;
                                 document.getElementById('temps[' + index + '][rate]').value = 1;
-                                document.getElementById('temps[' + index + '][total]').value = res.price_buy;
+                                document.getElementById('temps[' + index + '][total]').value = res.price_sell;
                                 document.getElementById('temps[' + index + '][discount]').value = 0;
-                                document.getElementById('temps[' + index + '][subtotal]').value = res.price_buy;
+                                document.getElementById('temps[' + index + '][subtotal]').value = res.price_sell;
 
                                 addNewRow();
                             } else {

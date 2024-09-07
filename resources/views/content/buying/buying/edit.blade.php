@@ -192,8 +192,6 @@
                                                         $iNum = $loop->iteration + 1;
                                                     @endphp
                                                 @endforeach
-
-                                                {{ $iNum }}
                                                 
                                                 <!-- new record -->
                                                 <tr class="rowCount" id="rowCount_{{ $iNum }}">

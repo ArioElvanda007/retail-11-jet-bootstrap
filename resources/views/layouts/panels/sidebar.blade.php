@@ -98,7 +98,17 @@
                             </li>
                         @endcan                        
 
-
+                        @can('manage stock')
+                            <li class="nav-item">
+                                <a href="{{ route('stock.stocks.index') }}"
+                                    class="nav-link {{ request()->routeIs('stock.stocks.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-cubes"></i>
+                                    <p>
+                                        Stocks
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan    
 
 
 

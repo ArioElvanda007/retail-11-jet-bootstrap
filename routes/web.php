@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\Stock\ProductController;
+use App\Http\Controllers\Stock\StockController;
 
 use App\Http\Controllers\Buying\SupplierController;
 use App\Http\Controllers\Buying\BuyingController;
@@ -47,6 +49,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('edit');
             Route::post('{product}', [ProductController::class, 'update'])->name('update');
             Route::get('{product}', [ProductController::class, 'destroy'])->name('destroy');
+        });     
+
+        Route::prefix('stocks')->name('stocks.')->group(function () {
+            Route::get('/', [StockController::class, 'index'])->name('index');
+            Route::get('/create', [StockController::class, 'create'])->name('create');
+            Route::post('/', [StockController::class, 'store'])->name('store');
+            Route::get('/edit/{stock}', [StockController::class, 'edit'])->name('edit');
+            Route::post('{stock}', [StockController::class, 'update'])->name('update');
+            Route::get('{stock}', [StockController::class, 'destroy'])->name('destroy');
         });     
     });
 
