@@ -213,7 +213,7 @@ return new class extends Migration
             ;
             
             SELECT 
-				id, name, price_buy, price_sell, (adj_begining + buy_begining - sell_begining) + adj_current + buy_current - sell_current AS stock, description, created_at, updated_at
+				id, name, code, price_buy, price_sell, (adj_begining + buy_begining - sell_begining) + adj_current + buy_current - sell_current AS stock, description, created_at, updated_at
             FROM tempProd2
             ;
         END");
