@@ -125,6 +125,58 @@
 
 
 
+
+
+
+                        @can('manage report')
+                            <li class="nav-header">REPORT</li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.stocks.index') }}"
+                                    class="nav-link {{ request()->routeIs('report.stocks.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Stocks
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#"
+                                    class="nav-link">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Buying
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#"
+                                    class="nav-link">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Selling
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#"
+                                    class="nav-link">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Cashflows
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan  
+
+
+
+
+
+
+
                         @role('admin')
                             <li class="nav-header">ADMIN</li>
                             <li class="nav-item">

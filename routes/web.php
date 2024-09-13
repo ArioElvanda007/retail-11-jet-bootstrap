@@ -32,6 +32,8 @@ use App\Http\Controllers\Selling\SellingController;
 use App\Http\Controllers\Accounting\BankController;
 use App\Http\Controllers\Accounting\CashFlowController;
 
+use App\Http\Controllers\Report\Stock\ReportStockController;
+
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\BusinessController;
@@ -124,6 +126,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         });     
     });
 
+
+
+
+
+
+    Route::prefix('report')->name('report.')->middleware(['can:manage report'])->group(function () {
+        Route::prefix('stocks')->name('stocks.')->group(function () {
+            Route::get('/', [ReportStockController::class, 'index'])->name('index');
+        }); 
+    });
 
 
 

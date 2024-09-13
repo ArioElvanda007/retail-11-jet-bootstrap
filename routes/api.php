@@ -15,3 +15,7 @@ Route::prefix('global')->group(function () {
     Route::get('select-product-id/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductID']);
     Route::get('select-product-code/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductCode']);
 });
+
+Route::prefix('report')->group(function () {
+    Route::get('stock/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'stock']);
+});
