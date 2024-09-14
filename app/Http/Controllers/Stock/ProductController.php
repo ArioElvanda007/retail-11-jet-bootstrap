@@ -56,6 +56,7 @@ class ProductController extends Controller
             'title' => 'create new product',
             'date_input' => Carbon::now()->format('Y-m-d'),
             'rate' => Request::get('stock'),
+            'adjust' => Request::get('stock'),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -107,13 +108,21 @@ class ProductController extends Controller
             'description' => Request::get('description'),
         ]);
 
-        Stock::create([
-            'prod_id' => $product->id,
-            'title' => 'update product ' . Carbon::now(),
-            'date_input' => Carbon::now()->format('Y-m-d'),
-            'rate' => Request::get('stock'),
-            'user_id' => Auth::user()->id,
-        ]);
+        if (Request::get('is_update') == 1) {
+            $prod_id = $product->id;
+            $date_input = Carbon::now()->format('Y-m-d');
+            
+            $query = DB::select("CALL spStock($prod_id, '$date_input')");
+            Stock::create([
+                'prod_id' => $product->id,
+                'title' => 'update product ' . Carbon::now(),
+                'date_input' => Carbon::now()->format('Y-m-d'),
+                'stock' => $query[0]->stock,
+                'rate' => Request::get('stock') - $query[0]->stock,
+                'adjust' => Request::get('stock'),
+                'user_id' => Auth::user()->id,
+            ]);
+        }
 
         return redirect()->route('stock.products.index');
     }

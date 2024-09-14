@@ -51,6 +51,14 @@
                                     </div>
                                     
                                     <div class="col-md-12 mt-3">
+                                        <div class="form-check mt-1 mr-4">
+                                            <input class="form-check-input" type="checkbox" id="is_update"
+                                                name="is_update" value = "1" />
+                                            <label for="is_update" class="form-check-label">Update Stock</label>
+                                        </div>
+                                    </div>
+                                                                        
+                                    <div class="col-md-12 mt-3">
                                         <label class="form-label fs-5" for="description">Description</label>
                                         <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description">{{ $query['description'] }}</textarea>
                                     </div>
