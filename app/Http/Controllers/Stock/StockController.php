@@ -8,6 +8,7 @@ use App\Models\Stock\Stock;
 use App\Models\Stock\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -57,11 +58,17 @@ class StockController extends Controller
     {
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
+                $prod_id = $value['id'];
+                $date_input = Request::get('date_input');
+
+                $query = DB::select("CALL spStock($prod_id, '$date_input')");
                 Stock::create([
                     'prod_id' => $value['id'],
                     'title' => Request::get('title'),
                     'date_input' => Request::get('date_input'),
-                    'rate' => $value['rate'],
+                    'stock' => $query[0]->stock,
+                    'rate' => $value['rate'] - $query[0]->stock,
+                    'adjust' => $value['rate'],
                     'note' => $value['note'],
                     'user_id' => Auth::user()->id,
                 ]);
@@ -105,11 +112,17 @@ class StockController extends Controller
                     Stock::where('id', '=', $value['stock_id'])->delete();
                 }
                 
+                $prod_id = $value['id'];
+                $date_input = Request::get('date_input');
+                
+                $query = DB::select("CALL spStock($prod_id, '$date_input')");
                 Stock::create([
                     'prod_id' => $value['id'],
                     'title' => Request::get('title'),
                     'date_input' => Request::get('date_input'),
-                    'rate' => $value['rate'],
+                    'stock' => $query[0]->stock,
+                    'rate' => $value['rate'] - $query[0]->stock,
+                    'adjust' => $value['rate'],
                     'note' => $value['note'],
                     'user_id' => Auth::user()->id,
                 ]);  

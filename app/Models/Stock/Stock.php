@@ -13,7 +13,9 @@ class Stock extends Model
         'prod_id',
         'title',
         'date_input',
+        'stock',
         'rate',
+        'adjust',
         'note',
         'user_id',
     ];

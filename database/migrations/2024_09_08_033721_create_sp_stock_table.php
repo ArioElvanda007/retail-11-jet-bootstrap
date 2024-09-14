@@ -31,38 +31,25 @@ return new class extends Migration
             
             DROP TEMPORARY TABLE IF EXISTS tempAdj;
             IF spIidx = 0 THEN
-				CREATE TEMPORARY TABLE tempAdj
+				CREATE TEMPORARY TABLE tempAdj                
 				SELECT 
-					A.prod_id, B.rate, A.date_input
-				FROM
-				(
-					SELECT 
-						MAX(id) AS id, prod_id, date_input 
-					FROM stocks
-					WHERE date_input <= spDate 
-					GROUP BY date_input, prod_id
-				) AS A
-				INNER JOIN
-					stocks AS B ON A.id = B.id
-				;   
+					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+				FROM 
+					stocks
+				WHERE date_input <= spDate 
+				GROUP BY date_input, prod_id
+				;
             END IF;
             
             IF spIidx <> 0 THEN
 				CREATE TEMPORARY TABLE tempAdj
 				SELECT 
-					A.prod_id, B.rate, A.date_input
-				FROM
-				(
-					SELECT 
-						MAX(id) AS id, prod_id, date_input 
-					FROM stocks
-					WHERE date_input <= spDate
-					GROUP BY date_input, prod_id
-				) AS A
-				INNER JOIN
-					stocks AS B ON A.id = B.id
-				WHERE B.prod_id = spIidx
-				;   
+					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+				FROM 
+					stocks
+				WHERE date_input <= spDate AND prod_id = spIidx
+				GROUP BY date_input, prod_id
+				;                
             END IF;
 
             
@@ -217,68 +204,6 @@ return new class extends Migration
             FROM tempProd2
             ;
         END");
-
-        // $procedure = "DROP PROCEDURE IF EXISTS spStock;
-        
-        // CREATE PROCEDURE spStock (IN spIidx BIGINT, spDate DATE)
-        // BEGIN
-        //     DROP TEMPORARY TABLE IF EXISTS tempProd;
-            
-        //     IF spIidx = 0 THEN
-        //         CREATE TEMPORARY TABLE tempProd
-        //         SELECT * FROM products;
-        //     END IF;
-        
-        //     IF spIidx <> 0 THEN
-        //         CREATE TEMPORARY TABLE tempProd
-        //         SELECT * FROM products WHERE id = spIidx;
-        //     END IF;
-            
-        //     SELECT 
-        //         A.id, A.code, A.name, A.price_buy, A.price_sell,
-        //         IFNULL(D.rate, 0) + IFNULL(G.rate, 0) - 
-        //         IFNULL(J.rate, 0) AS stock, A.description, A.created_at, A.updated_at
-        //     FROM
-        //         tempProd AS A
-        //     LEFT OUTER JOIN
-        //         (
-        //             SELECT 
-        //                 B.id, B.prod_id, B.rate 
-        //             FROM 
-        //                 stocks AS B
-        //             INNER JOIN
-        //                 (
-        //                     SELECT MAX(id) AS id, MAX(date_input) AS date_input FROM stocks
-        //                     WHERE date_input <= spDate
-        //                     GROUP BY prod_id    
-        //                 ) AS C ON B.id = C.id
-        //         ) AS D ON A.id = D.prod_id
-        //     LEFT OUTER JOIN
-        //         (
-        //             SELECT 
-        //                 F.prod_id, IFNULL(SUM(F.rate), 0) AS rate
-        //             FROM 
-        //                 buying AS E
-        //             INNER JOIN
-        //                 buying_details AS F ON E.id = F.buying_id WHERE E.date_input <= spDate 
-        //         ) AS G ON A.id = G.prod_id
-        //     LEFT OUTER JOIN
-        //         (
-        //             SELECT 
-        //                 I.prod_id, IFNULL(SUM(I.rate), 0) AS rate
-        //             FROM 
-        //                 selling AS H
-        //             INNER JOIN
-        //                 selling_details AS I ON H.id = I.selling_id WHERE H.date_input <= spDate
-        //         ) AS J ON A.id = J.prod_id    
-        //     -- GROUP BY A.id, A.name, A.price_buy, A.price_sell, A.description, A.created_at, A.updated_at
-        //     ;
-        // END
-
-        // ;";
-        
-        // DB::unprepared($procedure);
-
     }
 
     /**

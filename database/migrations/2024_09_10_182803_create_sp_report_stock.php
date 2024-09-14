@@ -20,19 +20,24 @@ return new class extends Migration
 
             DROP TEMPORARY TABLE IF EXISTS tempAdj;
             CREATE TEMPORARY TABLE tempAdj
-            SELECT 
-                A.prod_id, B.rate, A.date_input
-            FROM
-            (
-                SELECT 
-                    MAX(id) AS id, prod_id, date_input 
-                FROM stocks
-                WHERE date_input <= toDate 
-                GROUP BY date_input, prod_id
-            ) AS A
-            INNER JOIN
-                stocks AS B ON A.id = B.id
+			SELECT 
+				prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+			FROM 
+				stocks
+			WHERE date_input BETWEEN fromDate AND toDate 
+			GROUP BY date_input, prod_id
             ;   
+
+
+            DROP TEMPORARY TABLE IF EXISTS tempAdjBegin;
+            CREATE TEMPORARY TABLE tempAdjBegin
+			SELECT 
+				prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+			FROM 
+				stocks
+			WHERE date_input < fromDate 
+			GROUP BY date_input, prod_id
+            ;
 
 
             
@@ -82,8 +87,8 @@ return new class extends Migration
             ;     
             
             SELECT 
-                A.id, A.code, A.name,     
-                ifnull((SELECT ifnull(rate, 0) FROM tempAdj WHERE A.id = prod_id AND DATE(date_input) = (MAX(CASE WHEN DATE(B.date_input) < DATE(fromDate) THEN B.date_input ELSE '1900-01-01' END))), 0) AS adj_date00,
+                A.id, A.code, A.name,  
+                ifnull(G.rate, 0) AS adj_date00,
                 MAX(CASE WHEN DATE(B.date_input) = DATE(fromDate) THEN B.rate ELSE 0 END) AS adj_date01,
                 MAX(CASE WHEN DATE(B.date_input) = DATE(DATE_ADD(fromDate, INTERVAL 1 DAY)) THEN B.rate ELSE 0 END) AS adj_date02,
                 MAX(CASE WHEN DATE(B.date_input) = DATE(DATE_ADD(fromDate, INTERVAL 2 DAY)) THEN B.rate ELSE 0 END) AS adj_date03,
@@ -193,7 +198,9 @@ return new class extends Migration
             LEFT OUTER JOIN
                 tempBuyBegin AS E ON A.id = E.prod_id    
             LEFT OUTER JOIN
-                tempSellBegin AS F ON A.id = F.prod_id    
+                tempSellBegin AS F ON A.id = F.prod_id   
+            LEFT OUTER JOIN
+				tempAdjBegin AS G ON A.id = G.prod_id
             GROUP BY A.id, A.code, A.name
             ;
         END");

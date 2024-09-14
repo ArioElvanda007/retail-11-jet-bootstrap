@@ -94,7 +94,7 @@
                                         <input type="number" step="any" class="form-control rate"
                                             id="temps[{{ $iNum }}][rate]"
                                             name="temps[{{ $iNum }}][rate]" placeholder="Rate"
-                                            value="{{ $query->rate }}" onkeyup="calculateChange({{ $iNum }})"
+                                            value="{{ $query->adjust }}" onkeyup="calculateChange({{ $iNum }})"
                                             required />
                                     </td>
                                     <td>

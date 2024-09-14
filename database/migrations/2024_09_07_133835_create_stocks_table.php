@@ -16,7 +16,9 @@ return new class extends Migration
             $table->bigInteger('prod_id');
             $table->string('title', 100);
             $table->datetime('date_input');
+            $table->decimal('stock')->default(0); //history
             $table->decimal('rate')->default(0);
+            $table->decimal('adjust')->default(0);
             $table->text('note')->nullable();
             $table->bigInteger('user_id');
             $table->timestamps();

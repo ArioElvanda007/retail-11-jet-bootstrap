@@ -101,19 +101,20 @@
 
                             for (let col = 0; col <= 31; col++) {  
                                 iStock += parseFloat(res[index]['adj_date' + col.toString().padStart(2, '0')]) + parseFloat(res[index]['buy_date' + col.toString().padStart(2, '0')]) - parseFloat(res[index]['sell_date' + col.toString().padStart(2, '0')]);                           
-                                   
+                                    
                                 sAdj = res[index]['adj_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sAdj == 0) { sAdj = ""; }
 
                                 sBuy = res[index]['buy_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sBuy == 0) { sBuy = ""; }
                                 
-                                sSell = res[index]['adj_date' + col.toString().padStart(2, '0')].toLocaleString();
+                                sSell = res[index]['sell_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sSell == 0) { sSell = ""; }
 
                                 sStock = iStock.toLocaleString();
-                                if (sStock == 0) { sStock = ""; }
+                                if (sStock == 0) { sStock = ""; }   
                                 
+
 
                                 
                                 if (document.getElementById('type').value == 0) {
@@ -124,10 +125,10 @@
                                 else if (document.getElementById('type').value == 1)
                                 {
                                     html += 
-                                        '<td class="text-right" style="background-color: #e5ffc5">' + sAdj + '</td>' +
+                                        '<td class="text-right">' + sAdj + '</td>' +
                                         '<td class="text-right">' + sBuy + '</td>' +
                                         '<td class="text-right">' + sSell + '</td>' +
-                                        '<td class="text-right">' + sStock + '</td>'
+                                        '<td class="text-right" style="background-color: #e5ffc5">' + sStock + '</td>'
                                     ;
                                 }
                             }

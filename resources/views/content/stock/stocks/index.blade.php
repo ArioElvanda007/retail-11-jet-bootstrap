@@ -44,7 +44,9 @@
                                 <th>Title</th>
                                 <th>Date Input</th>
                                 <th>Product</th>
+                                <th>Stock</th>
                                 <th>Rate</th>
+                                <th>Adjust</th>
                                 <th>Note</th>
                                 <th>Created</th>
                                 <th>Updated</th>
@@ -62,6 +64,12 @@
                                     </td>
                                     <td>
                                         {{ $data['products']['name'] }}
+                                    </td>
+                                    <td>
+                                        {{ $data->stock }}
+                                    </td>
+                                    <td>
+                                        {{ $data->adjust }}
                                     </td>
                                     <td>
                                         {{ $data->rate }}
