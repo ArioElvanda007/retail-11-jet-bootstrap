@@ -169,6 +169,16 @@
                                     </p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('report.accounting.index') }}"
+                                    class="nav-link {{ request()->routeIs('report.accounting.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Balance
+                                    </p>
+                                </a>
+                            </li>
                         @endcan  
 
 
