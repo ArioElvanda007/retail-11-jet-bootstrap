@@ -11,12 +11,32 @@
             <div class="card card-solid">
                 <div class="card-body">
 
-                    <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
-                        <button type="button" onclick='create()' class="btn btn-dark">
-                            <i class="fa fa-plus"></i>
-                            <span class="ms-2">Create</span>
-                        </button>
-                    </div>
+                    <form class="form mb-2" action="{{ route('accounting.cashflows.index') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-3 col-6 mb-2">
+                                <label class="form-label fs-5" for="date_from">Date From</label>
+                                <input type="date" class="form-control" id="date_from" name="date_from"
+                                    placeholder="Date From" value="{{ date('Y-m-d', strtotime($date_from)) }}" required />
+                            </div>
+
+                            <div class="col-md-3 col-6 mb-2">
+                                <label class="form-label fs-5" for="date_to">To</label>
+                                <input type="date" class="form-control" id="date_to" name="date_to" placeholder="To"
+                                    value="{{ date('Y-m-d', strtotime($date_to)) }}" required />
+                            </div>
+
+                            <div class="col-md-6 mb-2 d-flex align-items-end">
+                                <button type="submit" id="btnSearch" name="btnSearch" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+
+                                <button type="button" onclick='create()' class="ml-2 btn btn-dark">
+                                    <i class="fa fa-plus"></i>
+                                    <span class="ms-2">Create</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
