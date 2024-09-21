@@ -20,4 +20,5 @@ Route::prefix('report')->group(function () {
     Route::get('stock/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'stock']);
     Route::get('buying/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'buying']);
     Route::get('selling/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'selling']);
+    Route::get('cashflows/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'cashflows']);
 });

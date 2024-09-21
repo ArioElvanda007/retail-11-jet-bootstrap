@@ -24,5 +24,11 @@ class ReportAPIController extends Controller
     {
         $query = DB::select("CALL spReportSelling('$fromDate')");
         return response()->json($query);
-    }    
+    }  
+    
+    public function cashflows($fromDate, $type)
+    {
+        $query = DB::select("CALL spReportCashflow('$fromDate')");
+        return response()->json($query);
+    }      
 }

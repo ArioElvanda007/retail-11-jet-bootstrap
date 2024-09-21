@@ -35,6 +35,7 @@ use App\Http\Controllers\Accounting\CashFlowController;
 use App\Http\Controllers\Report\Stock\ReportStockController;
 use App\Http\Controllers\Report\Buying\ReportBuyingController;
 use App\Http\Controllers\Report\Selling\ReportSellingController;
+use App\Http\Controllers\Report\Cashflows\ReportCashflowController;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
@@ -144,6 +145,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::prefix('selling')->name('selling.')->group(function () {
             Route::get('/', [ReportSellingController::class, 'index'])->name('index');
+        }); 
+
+        Route::prefix('cashflows')->name('cashflows.')->group(function () {
+            Route::get('/', [ReportCashflowController::class, 'index'])->name('index');
         }); 
     });
 

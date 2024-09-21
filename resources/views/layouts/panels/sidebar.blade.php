@@ -161,8 +161,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link">
+                                <a href="{{ route('report.cashflows.index') }}"
+                                    class="nav-link {{ request()->routeIs('report.cashflows.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-circle"></i>
                                     <p>
                                         Cashflows
