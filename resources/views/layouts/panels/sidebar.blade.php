@@ -141,8 +141,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link">
+                                <a href="{{ route('report.buying.index') }}"
+                                    class="nav-link {{ request()->routeIs('report.buying.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-circle"></i>
                                     <p>
                                         Buying

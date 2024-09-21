@@ -12,11 +12,10 @@ class ReportStockController extends Controller
     {
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
-            ['link' => "buying.buying.index", 'name' => "Stocks"]
+            ['link' => "report.stocks.index", 'name' => "Report Stocks"]
         ];
 
         $date_from = Carbon::now();
-
         return view('content.report.stocks.index', compact('date_from'), ['breadcrumbs' => $breadcrumbs]);
     }    
 }
