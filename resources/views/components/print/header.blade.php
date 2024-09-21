@@ -4,7 +4,8 @@
         <div class="row">
             <div class="d-flex flex-column">
                 <div class="text-center">{{ $buss->name }}</div>
-                <div class="text-center mb-2 border-bottom">{{ $buss->address }}</div>
+                <div class="text-center mb-0">{{ $buss->address }}</div>
+                <div class="text-center mb-2 border-bottom">WhatsApp: {{ $buss->telephone }}</div>
             </div>
         </div>
     </div>
