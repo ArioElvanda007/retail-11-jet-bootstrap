@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -15,7 +17,10 @@ class DashboardController extends Controller
             ['link' => "dashboard", 'name' => "Dashboard"]
         ];
         
-        return view('content.dashboard', ['breadcrumbs' => $breadcrumbs]);        
+        $dateFrom = Carbon::now()->format('Y-m-d');
+        $query = DB::select("CALL spReportDashboard('$dateFrom')");
+
+        return view('content.dashboard', compact('query'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**
