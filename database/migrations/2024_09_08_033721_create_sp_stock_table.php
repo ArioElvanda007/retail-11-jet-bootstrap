@@ -15,7 +15,7 @@ return new class extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS spStock;');
         DB::unprepared("CREATE PROCEDURE spStock (IN spIidx BIGINT, spDate DATE)
         BEGIN
-            DROP TEMPORARY TABLE IF EXISTS tempProd;
+			DROP TEMPORARY TABLE IF EXISTS tempProd;
             IF spIidx = 0 THEN
                 CREATE TEMPORARY TABLE tempProd
                 SELECT * FROM products;
@@ -36,7 +36,7 @@ return new class extends Migration
 					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
 				FROM 
 					stocks
-				WHERE date_input <= spDate 
+				WHERE DATE(date_input) = DATE(spDate) 
 				GROUP BY date_input, prod_id
 				;
             END IF;
@@ -47,10 +47,36 @@ return new class extends Migration
 					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
 				FROM 
 					stocks
-				WHERE date_input <= spDate AND prod_id = spIidx
+				WHERE DATE(date_input) = DATE(spDate) AND prod_id = spIidx
 				GROUP BY date_input, prod_id
 				;                
             END IF;
+
+
+
+            DROP TEMPORARY TABLE IF EXISTS tempAdjBegin;
+            IF spIidx = 0 THEN
+				CREATE TEMPORARY TABLE tempAdjBegin                
+				SELECT 
+					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+				FROM 
+					stocks
+				WHERE DATE(date_input) < DATE(spDate) 
+				GROUP BY date_input, prod_id
+				;
+            END IF;
+            
+            IF spIidx <> 0 THEN
+				CREATE TEMPORARY TABLE tempAdjBegin
+				SELECT 
+					prod_id, IFNULL(SUM(rate), 0) AS rate, date_input
+				FROM 
+					stocks
+				WHERE DATE(date_input) < DATE(spDate) AND prod_id = spIidx
+				GROUP BY date_input, prod_id
+				;                
+            END IF;
+
 
             
             DROP TEMPORARY TABLE IF EXISTS tempBuy;
@@ -61,7 +87,7 @@ return new class extends Migration
 				FROM 
 					buying AS A
 				INNER JOIN
-					buying_details AS B ON A.id = B.buying_id WHERE A.date_input = spDate
+					buying_details AS B ON A.id = B.buying_id WHERE DATE(A.date_input) = DATE(spDate)
 					GROUP BY B.prod_id, A.date_input
 				;
             END IF;
@@ -73,7 +99,7 @@ return new class extends Migration
 				FROM 
 					buying AS A
 				INNER JOIN
-					buying_details AS B ON A.id = B.buying_id WHERE A.date_input = spDate AND B.prod_id = spIidx
+					buying_details AS B ON A.id = B.buying_id WHERE DATE(A.date_input) = DATE(spDate) AND B.prod_id = spIidx
 					GROUP BY B.prod_id, A.date_input
 				;
             END IF;
@@ -89,7 +115,7 @@ return new class extends Migration
 				FROM 
 					buying AS A
 				INNER JOIN
-					buying_details AS B ON A.id = B.buying_id WHERE A.date_input < spDate
+					buying_details AS B ON A.id = B.buying_id WHERE DATE(A.date_input) < DATE(spDate)
 					GROUP BY B.prod_id
 				; 
             END IF;
@@ -101,7 +127,7 @@ return new class extends Migration
 				FROM 
 					buying AS A
 				INNER JOIN
-					buying_details AS B ON A.id = B.buying_id WHERE A.date_input < spDate AND B.prod_id = spIidx
+					buying_details AS B ON A.id = B.buying_id WHERE DATE(A.date_input) < DATE(spDate) AND B.prod_id = spIidx
 					GROUP BY B.prod_id
 				; 
             END IF;
@@ -119,7 +145,7 @@ return new class extends Migration
 				FROM 
 					selling AS A
 				INNER JOIN
-					selling_details AS B ON A.id = B.selling_id WHERE A.date_input = spDate
+					selling_details AS B ON A.id = B.selling_id WHERE DATE(A.date_input) = DATE(spDate)
 					GROUP BY B.prod_id, A.date_input
 				; 
 			END IF;
@@ -131,7 +157,7 @@ return new class extends Migration
 				FROM 
 					selling AS A
 				INNER JOIN
-					selling_details AS B ON A.id = B.selling_id WHERE A.date_input = spDate AND B.prod_id = spIidx 
+					selling_details AS B ON A.id = B.selling_id WHERE DATE(A.date_input) = DATE(spDate) AND B.prod_id = spIidx 
 					GROUP BY B.prod_id, A.date_input
 				; 
 			END IF;
@@ -175,7 +201,7 @@ return new class extends Migration
             CREATE TEMPORARY TABLE tempProd2
             SELECT 
                 A.id, A.code, A.name, A.price_buy, A.price_sell,     
-                ifnull((SELECT ifnull(rate, 0) FROM tempAdj WHERE A.id = prod_id AND DATE(date_input) = (MAX(CASE WHEN DATE(B.date_input) < DATE(spDate) THEN B.date_input ELSE '1900-01-01' END))), 0) AS adj_begining,
+				ifnull(G.rate, 0) AS adj_begining,
 				ifnull(E.rate, 0) AS buy_begining,
                 ifnull(F.rate, 0) AS sell_begining,
 
@@ -196,6 +222,8 @@ return new class extends Migration
                 tempBuyBegin AS E ON A.id = E.prod_id    
             LEFT OUTER JOIN
                 tempSellBegin AS F ON A.id = F.prod_id    
+            LEFT OUTER JOIN
+                tempAdjBegin AS G ON A.id = G.prod_id    
             GROUP BY A.id, A.name, A.price_buy, A.price_sell, A.description, A.created_at, A.updated_at
             ;
             
