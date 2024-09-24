@@ -104,12 +104,15 @@
                                     
                                 sAdj = res[index]['adj_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sAdj == 0) { sAdj = ""; }
+                                if (col == 0) { sAdj = ""; }
 
                                 sBuy = res[index]['buy_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sBuy == 0) { sBuy = ""; }
+                                if (col == 0) { sBuy = ""; }
                                 
                                 sSell = res[index]['sell_date' + col.toString().padStart(2, '0')].toLocaleString();
                                 if (sSell == 0) { sSell = ""; }
+                                if (col == 0) { sSell = ""; }
 
                                 sStock = iStock.toLocaleString();
                                 if (sStock == 0) { sStock = ""; }   
