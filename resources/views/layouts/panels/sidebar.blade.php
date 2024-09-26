@@ -186,6 +186,24 @@
 
 
 
+                        @can('manage content')
+                            <li class="nav-header">CONTENT</li>
+                            <li class="nav-item">
+                                <a href="{{ route('content.home.headlines.index') }}"
+                                    class="nav-link {{ request()->routeIs('content.home.headlines.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Headlines
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan  
+
+
+
+
+
+
 
                         @role('admin')
                             <li class="nav-header">ADMIN</li>

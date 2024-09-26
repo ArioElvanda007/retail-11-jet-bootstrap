@@ -38,6 +38,8 @@ use App\Http\Controllers\Report\Selling\ReportSellingController;
 use App\Http\Controllers\Report\Cashflows\ReportCashflowController;
 use App\Http\Controllers\Report\Accounting\ReportAccountingController;
 
+use App\Http\Controllers\Content\Home\HeadlineController;
+
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\BusinessController;
@@ -158,6 +160,20 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     });
 
 
+
+
+    Route::prefix('content')->name('content.')->middleware(['can:manage content'])->group(function () {
+        Route::prefix('home')->name('home.')->group(function () {
+            Route::prefix('headlines')->name('headlines.')->group(function () {
+                Route::get('/', [HeadlineController::class, 'index'])->name('index');
+                Route::get('/create', [HeadlineController::class, 'create'])->name('create');
+                Route::post('/', [HeadlineController::class, 'store'])->name('store');
+                Route::get('/edit/{headline}', [HeadlineController::class, 'edit'])->name('edit');
+                Route::post('{headline}', [HeadlineController::class, 'update'])->name('update');
+                Route::get('{headline}', [HeadlineController::class, 'destroy'])->name('destroy');
+            }); 
+        });         
+    });
 
 
 

@@ -15,6 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'ERP'),
     'description' => env('APP_DESC', 'Retail-ERP3'),
+    'dir_img_headline' => env('LOCATION_FILE_HEADLINE', 'image/headline'),
 
     /*
     |--------------------------------------------------------------------------
