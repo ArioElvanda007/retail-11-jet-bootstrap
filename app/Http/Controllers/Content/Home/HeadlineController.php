@@ -7,6 +7,7 @@ use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use App\Models\Content\Home\Headline;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class HeadlineController extends Controller
 {
@@ -32,7 +33,8 @@ class HeadlineController extends Controller
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "content.home.headlines.index", 'name' => "Headlines"], ['link' => "content.home.headlines.create", 'name' => "Create Headline"]
         ];
 
-        return view('content.content.home.headlines.create', ['breadcrumbs' => $breadcrumbs]); 
+        $seq = Headline::select('seq', 'title')->groupBy('seq', 'title')->orderBy('seq')->get();
+        return view('content.content.home.headlines.create', compact('seq'), ['breadcrumbs' => $breadcrumbs]); 
     }
 
     /**
@@ -50,8 +52,10 @@ class HeadlineController extends Controller
             $image = null;
         }
 
+        $seq = $request->seq;
+        DB::statement("UPDATE content_home_headlines SET seq = seq + 1 WHERE seq >= " . $seq . ";");
         Headline::create([
-            'seq' => 1,
+            'seq' => $seq,
             'image' => $image,
             'title' => Request::get('title'),
             'description' => Request::get('description'),
@@ -86,7 +90,10 @@ class HeadlineController extends Controller
             'description' => $headline->description,
             'is_active' => $headline->is_active,
         ];
-        return view('content.content.home.headlines.edit', compact('query'), ['breadcrumbs' => $breadcrumbs]);         
+
+        $seq = Headline::select('seq', 'title')->groupBy('seq', 'title')->orderBy('seq')->get();
+        
+        return view('content.content.home.headlines.edit', compact('query', 'seq'), ['breadcrumbs' => $breadcrumbs]);         
     }
 
     /**
@@ -121,7 +128,10 @@ class HeadlineController extends Controller
             $image = $headline->image;
         }
 
+        $seq = $request->seq;
+        DB::statement("UPDATE content_home_headlines SET seq = seq + 1 WHERE seq >= " . $seq . ";");
         $headline->update([
+            'seq' => $seq,
             'image' => $image,
             'title' => Request::get('title'),
             'description' => Request::get('description'),

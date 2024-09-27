@@ -56,6 +56,18 @@
 
                             <div class="col-md-6">
                                 <div class="col-md-12 mt-3">
+                                    <label class="form-label fs-5" for="title">After</label>
+                                    <select class="mt-2 form-control seq" style="width: 100%;"
+                                        name="seq" id="seq" required>
+                                        <option value="0" selected="selected">First</option>
+                                        @foreach ($seq as $data)
+                                            <option value="{{ $data->seq }}">
+                                                {{ $data->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 mt-3">
                                     <label class="form-label fs-5" for="title">Title</label>
                                     <input type="text" class="form-control" id="title" name="title"
                                         placeholder="Title" value="{{ $query['title'] }}" autofocus required />
@@ -104,8 +116,19 @@
     <!-- /.content -->
 @endsection
 
+@section('page-style')
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
+
 @section('page-script')
+    <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+
     <script>
+        $('.seq').select2({
+            theme: 'bootstrap4'
+        })
+
         function backToList() {
             window.location.href = "{{ route('content.home.headlines.index') }}";
         }
