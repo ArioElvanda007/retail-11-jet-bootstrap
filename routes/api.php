@@ -23,3 +23,7 @@ Route::prefix('report')->group(function () {
     Route::get('cashflows/{fromDate}/{type}', [App\Http\Controllers\API\ReportAPIController::class, 'cashflows']);
     Route::get('accounting/{fromDate}/{toDate}', [App\Http\Controllers\API\ReportAPIController::class, 'accounting']);
 });
+
+Route::prefix('content')->group(function () {
+    Route::get('dashboard', [App\Http\Controllers\API\ContentAPIController::class, 'dashboard']);
+});
