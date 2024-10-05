@@ -79,8 +79,8 @@ class BuyingController extends Controller
         $subtotal = 0;
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
-                $rate = $rate + $value['rate'];
-                $subtotal = $subtotal + ($value['rate'] * $value['amount']);
+                $rate += $value['rate'];
+                $subtotal += ($value['rate'] * $value['amount']);
             }
         }
 
