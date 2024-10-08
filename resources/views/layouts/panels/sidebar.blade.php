@@ -186,7 +186,7 @@
 
 
 
-                        @can('manage content')
+                        {{-- @can('manage content')
                             <li class="nav-header">CONTENT</li>
                             <li class="nav-item">
                                 <a href="{{ route('content.home.headlines.index') }}"
@@ -197,7 +197,7 @@
                                     </p>
                                 </a>
                             </li>
-                        @endcan  
+                        @endcan   --}}
 
 
 

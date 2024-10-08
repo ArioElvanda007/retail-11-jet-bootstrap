@@ -75,7 +75,7 @@ return new class extends Migration
             FROM 
                 cashflows
             WHERE date_input BETWEEN fromDate AND toDate 
-            GROUP BY DATE(date_input); 
+            GROUP BY DATE(date_input), title; 
             
             
             

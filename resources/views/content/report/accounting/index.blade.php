@@ -105,21 +105,32 @@
 
 
 
-                            if (parseFloat(res[index]['debet']) < 0) {
-                                html += '<th class="text-right text-danger">' + formatNumber(res[index]['debet']) + '</th>';
+                            if (res[index]['description'] == 'Begining') {
+                                html += '<th></th>';
                             }
                             else {
-                                html += '<th class="text-right">' + formatNumber(res[index]['debet']) + '</th>';
+                                if (parseFloat(res[index]['debet']) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['debet']) + '</th>';
+                                }
+                                else {
+                                    html += '<th class="text-right">' + formatNumber(res[index]['debet']) + '</th>';
+                                }
                             }
 
 
 
-                            if (parseFloat(res[index]['credit']) < 0) {
-                                html += '<th class="text-right text-danger">' + formatNumber(res[index]['credit']) + '</th>';
+
+                            if (res[index]['description'] == 'Begining') {
+                                html += '<th></th>';
                             }
                             else {
-                                html += '<th class="text-right">' + formatNumber(res[index]['credit']) + '</th>';
-                            }                            
+                                if (parseFloat(res[index]['credit']) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['credit']) + '</th>';
+                                }
+                                else {
+                                    html += '<th class="text-right">' + formatNumber(res[index]['credit']) + '</th>';
+                                }                            
+                            }
 
 
 
@@ -130,20 +141,6 @@
                             else {
                                 html += '<th class="text-right">' + balance.toLocaleString() + '</th>';
                             }  
-
-
-
-                            // html += 
-                            //     '</tr>';
-
-                            // var html = 
-                            //     '<tr>' +
-                            //         '<td>' + res[index]['date_input'] + '</td>' +
-                            //         '<td>' + res[index]['description'] + '</td>' +
-                            //         '<td class="text-right">' + formatNumber(res[index]['debet']) + '</td>' +
-                            //         '<td class="text-right">' + formatNumber(res[index]['credit']) + '</td>' +
-                            //         '<td class="text-right">' + balance.toLocaleString() + '</td>' +
-                            //     '</tr>';
 
                             $('#use-tBody').append(html);            
                         }
