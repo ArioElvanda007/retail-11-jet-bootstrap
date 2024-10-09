@@ -116,11 +116,18 @@ return new class extends Migration
             DROP TEMPORARY TABLE IF EXISTS tempResult;
             CREATE TEMPORARY TABLE tempResult
             SELECT
+				CASE 
+					WHEN description = 'Buying' THEN 1000 
+					WHEN description = 'Sales' THEN 999
+					WHEN description = 'Modal Awal' THEN 0
+					ELSE 1
+				END seq,
                 date_input, description, IFNULL(SUM(debet), 0) AS debet, IFNULL(SUM(credit), 0) AS credit
             FROM 
                 tempCollect
             GROUP BY date_input, description 
-            ORDER BY date_input;
+            -- ORDER BY date_input
+            ;
 
 
             
@@ -135,7 +142,7 @@ return new class extends Migration
                 WHERE A.seq > 1
             ) AND description = '';
             
-            SELECT * FROM tempResult;
+            SELECT * FROM tempResult ORDER BY date_input, seq;
         END");
     }
 

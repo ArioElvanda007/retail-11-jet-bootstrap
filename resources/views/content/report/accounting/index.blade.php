@@ -34,7 +34,21 @@
                         <div class="col-md-3 col-6 mb-2"></div>                        
                     </div>
 
+
+
+
+
+
+                    <!-- Info boxes -->
+                    <div class="row" id="boxView">
+                        
+                    </div>
+                    <!-- /.row -->
+
+
+
                     <div class="row mt-2" id="dataView" hidden>
+                        <h4 class="ml-2">Details</h4>
                         <div class="col-12">
                             <table class="table table-bordered table-sm table-responsive text-nowrap">
                                 <thead id="use-tThead" class="text-sm font-monospace">
@@ -56,9 +70,16 @@
     <script>
         function show() {
             document.getElementById('dataView').hidden = true;
+
             createHeader();
             document.getElementById('use-tBody').innerHTML = "";
-            
+            document.getElementById('boxView').innerHTML = "";
+
+            var $iSumBeginning = 0;
+            var $SumDebet = 0;
+            var $SumCredit = 0;
+            var $SumBalace = 0;
+
             $.ajax({
                 dataType: 'json',
                 type: "GET",
@@ -73,8 +94,18 @@
                 success: function(res) {      
                     if (res.length > 0) {  
                         let balance = 0;
-                        for (let index = 0; index < res.length; index++) {     
+                        // fill table *******************
+                        for (let index = 0; index < res.length; index++) {    
+                            if (index == 0) {
+                                $iSumBeginning = parseFloat(res[index]['debet']) - parseFloat(res[index]['credit']);
+                            } 
+
                             balance += parseFloat(res[index]['debet']) - parseFloat(res[index]['credit']);
+
+                            if (index != 0) {
+                                $SumDebet += parseFloat(res[index]['debet']);
+                                $SumCredit += parseFloat(res[index]['credit']);
+                            } 
 
                             var html = 
                                 '<tr>';
@@ -144,6 +175,90 @@
 
                             $('#use-tBody').append(html);            
                         }
+
+                        // fill box *******************
+                        var html2 =
+                        '<div class="col-12 col-sm-6 col-md-3">' +
+                            '<div class="info-box">' +
+                                '<span class="info-box-icon bg-yellow elevation-1"><i class="fas fa-dollar"></i></span>' +
+
+                                '<div class="info-box-content">' +
+                                    '<span class="info-box-text">Beginning</span>' +
+                                    '<span class="info-box-number">' +
+                                        '<small>Rp.</small> ';
+                                        if (parseFloat($iSumBeginning) < 0) {
+                                            html2 += '<span class="text-right text-danger">' + $iSumBeginning.toLocaleString() + '</span>';
+                                        } else {
+                                            html2 += '<span>' + $iSumBeginning.toLocaleString() + '</span>';
+                                        }
+
+                                        html2 += 
+                                    '</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-6 col-md-3">' +
+                            '<div class="info-box mb-3">' +
+                                '<span class="info-box-icon bg-primary elevation-1"><i class="fas fa-coffee"></i></span>' +
+
+                                '<div class="info-box-content">' +
+                                    '<span class="info-box-text">Debet</span>' +
+                                    '<span class="info-box-number">' +
+                                        '<small>Rp.</small> ';
+                                        if (parseFloat($SumDebet) < 0) {
+                                            html2 += '<span class="text-right text-danger">' + $SumDebet.toLocaleString() + '</span>';
+                                        } else {
+                                            html2 += '<span>' + $SumDebet.toLocaleString() + '</span>';
+                                        }
+
+                                        html2 += 
+                                    '</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="clearfix hidden-md-up"></div>' +
+
+                        '<div class="col-12 col-sm-6 col-md-3">' +
+                            '<div class="info-box mb-3">' +
+                                '<span class="info-box-icon bg-danger elevation-1"><i class="fas fa-shopping-cart"></i></span>' +
+
+                                '<div class="info-box-content">' +
+                                    '<span class="info-box-text">Credit</span>' +
+                                    '<span class="info-box-number">' +
+                                        '<small>Rp.</small> ';
+                                        if (parseFloat($SumCredit) < 0) {
+                                            html2 += '<span class="text-right text-danger">' + $SumCredit.toLocaleString() + '</span>';
+                                        } else {
+                                            html2 += '<span>' + $SumCredit.toLocaleString() + '</span>';
+                                        }
+
+                                        html2 +=                                         
+                                    '</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-6 col-md-3">' +
+                            '<div class="info-box mb-3">' +
+                                '<span class="info-box-icon bg-success elevation-1"><i class="fas fa-bank"></i></span>' +
+
+                                '<div class="info-box-content">' +
+                                    '<span class="info-box-text">Balance</span>' +
+                                    '<span class="info-box-number">' +
+                                        '<small>Rp.</small> ';
+                                        if (parseFloat($iSumBeginning + $SumDebet - $SumCredit) < 0) {
+                                            html2 += '<span class="text-right text-danger">' + ($iSumBeginning + $SumDebet - $SumCredit).toLocaleString() + '</span>';
+                                        } else {
+                                            html2 += '<span>' + ($iSumBeginning + $SumDebet - $SumCredit).toLocaleString() + '</span>';
+                                        }
+
+                                        html2 +=                                         
+                                    '</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+
+                        $('#boxView').append(html2);            
                     }  else {
                         $("#use-tBody").append(
                             '<tr>' +
