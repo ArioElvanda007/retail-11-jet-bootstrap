@@ -34,7 +34,7 @@
                     :
                 </div>
                 <div class="col-7">
-                    {{ date('Y-m-d', strtotime($query->date_input)) }}
+                    {{ date('d-M-Y', strtotime($query->date_input)) }}
                 </div>
             </div>
         @else
@@ -46,7 +46,7 @@
                     :
                 </div>
                 <div class="col-7">
-                    {{ date('Y-m-d', strtotime($query->date_input)) }}
+                    {{ date('d-M-Y', strtotime($query->date_input)) }}
                 </div>
             </div>
         @endif        
