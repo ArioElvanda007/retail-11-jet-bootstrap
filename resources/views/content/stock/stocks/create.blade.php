@@ -29,8 +29,14 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fs-5" for="date_input">Date Input</label>
-                                <input type="date" class="form-control" id="date_input" name="date_input"
-                                    placeholder="Date Input" value="{{ date('Y-m-d', strtotime($date_input)) }}" required />
+
+                                <div class="input-group date" id="show_date_input" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#show_date_input" id="date_input" name="date_input" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_input)) }}"
+                                    required/>
+                                    <div class="input-group-append" data-target="#show_date_input" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>                                         
                             </div>
                         </div>
 
@@ -38,7 +44,7 @@
 
 
                         <!--transaksi -->
-                        <table class="table table-bordered table-striped table-sm mt-2">
+                        <table class="table table-bordered table-striped table-responsive text-nowrap table-sm mt-2">
                             <thead>
                                 <tr>
                                     <th scope="col" hidden>StockID</th>
@@ -144,7 +150,6 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Product</th>
-                                <th>Stock</th>
                                 <th class="d-print-none">#</th>
                             </tr>
                         </thead>
@@ -156,9 +161,6 @@
                                     </td>
                                     <td>
                                         {{ $data->name }}
-                                    </td>
-                                    <td>
-
                                     </td>
                                     <td class="d-print-none">
                                         <button type="button" class="btn btn-primary btn-sm"
@@ -188,6 +190,9 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+
+    <!-- / datetimepicker -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 
 @section('page-script')
@@ -198,7 +203,15 @@
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
+    <!-- / datetimepicker -->
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <script>
+        $('#show_date_input').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
         $("#example1").DataTable({
             "paging": true,
             "lengthChange": true,

@@ -15,14 +15,26 @@
                         <div class="row">
                             <div class="col-md-3 col-6 mb-2">
                                 <label class="form-label fs-5" for="date_from">Date From</label>
-                                <input type="date" class="form-control" id="date_from" name="date_from"
-                                    placeholder="Date From" value="{{ date('Y-m-d', strtotime($date_from)) }}" required />
+
+                                <div class="input-group date" id="show_date_from" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#show_date_from" id="date_from" name="date_from" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_from)) }}"
+                                    required/>
+                                    <div class="input-group-append" data-target="#show_date_from" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div> 
                             </div>
 
                             <div class="col-md-3 col-6 mb-2">
                                 <label class="form-label fs-5" for="date_to">To</label>
-                                <input type="date" class="form-control" id="date_to" name="date_to" placeholder="To"
-                                    value="{{ date('Y-m-d', strtotime($date_to)) }}" required />
+
+                                <div class="input-group date" id="show_date_to" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#show_date_to" id="date_to" name="date_to" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_to)) }}"
+                                    required/>
+                                    <div class="input-group-append" data-target="#show_date_to" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>                                    
                             </div>
 
                             <div class="col-md-6 mb-2 d-flex align-items-end">
@@ -43,12 +55,12 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Date Input</th>
+                                <th>Code</th>
                                 <th>Product</th>
                                 <th>Stock</th>
                                 <th>Rate</th>
                                 <th>Adjust</th>
                                 <th>Note</th>
-                                <th>Created</th>
                                 <th>Updated</th>
                                 <th class="d-print-none">#</th>
                             </tr>
@@ -60,25 +72,25 @@
                                         {{ $data->title }}
                                     </td>
                                     <td>
-                                        {{ date('Y-m-d', strtotime($data->date_input)) }}
+                                        {{ date('d-M-Y', strtotime($data->date_input)) }}
+                                    </td>
+                                    <td>
+                                        {{ $data['products']['code'] }}
                                     </td>
                                     <td>
                                         {{ $data['products']['name'] }}
                                     </td>
-                                    <td>
-                                        {{ $data->stock }}
-                                    </td>
-                                    <td>
-                                        {{ $data->adjust }}
-                                    </td>
-                                    <td>
-                                        {{ $data->rate }}
-                                    </td>
+                                    <td class="text-right">
+                                        {{ number_format($data->stock, 0, '.', ',') }}
+                                    </td>                                    
+                                    <td class="text-right">
+                                        {{ number_format($data->adjust, 0, '.', ',') }}
+                                    </td>                                    
+                                    <td class="text-right">
+                                        {{ number_format($data->rate, 0, '.', ',') }}
+                                    </td>                                    
                                     <td>
                                         {{ $data->note }}
-                                    </td>
-                                    <td>
-                                        {{ $data->created_at }}
                                     </td>
                                     <td>
                                         {{ $data->updated_at }}
@@ -110,6 +122,9 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+
+    <!-- / datetimepicker -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 
 @section('page-script')
@@ -119,7 +134,19 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
+    <!-- / datetimepicker -->
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <script>
+        $('#show_date_from').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
+        $('#show_date_to').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
         $("#example1").DataTable({
             "paging": true,
             "lengthChange": true,

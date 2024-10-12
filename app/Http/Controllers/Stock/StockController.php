@@ -23,8 +23,8 @@ class StockController extends Controller
         ];
 
         if (Request::get("date_from")) {
-            $date_from = Carbon::parse(Request::get("date_from"));
-            $date_to = Carbon::parse(Request::get("date_to"));
+            $date_from = date('Y-m-d', strtotime(Request::get('date_from')));
+            $date_to = date('Y-m-d', strtotime(Request::get('date_to')));  
         } else {
             $date_from = Carbon::now()->addDays(-31);
             $date_to = Carbon::now();
@@ -59,13 +59,13 @@ class StockController extends Controller
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
                 $prod_id = $value['id'];
-                $date_input = Request::get('date_input');
-
+                $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+               
                 $query = DB::select("CALL spStock($prod_id, '$date_input')");
                 Stock::create([
                     'prod_id' => $value['id'],
                     'title' => Request::get('title'),
-                    'date_input' => Request::get('date_input'),
+                    'date_input' => $date_input,
                     'stock' => $query[0]->stock,
                     'rate' => $value['rate'] - $query[0]->stock,
                     'adjust' => $value['rate'],
@@ -113,13 +113,13 @@ class StockController extends Controller
                 }
                 
                 $prod_id = $value['id'];
-                $date_input = Request::get('date_input');
-                
+                $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+
                 $query = DB::select("CALL spStock($prod_id, '$date_input')");
                 Stock::create([
                     'prod_id' => $value['id'],
                     'title' => Request::get('title'),
-                    'date_input' => Request::get('date_input'),
+                    'date_input' => $date_input,
                     'stock' => $query[0]->stock,
                     'rate' => $value['rate'] - $query[0]->stock,
                     'adjust' => $value['rate'],
