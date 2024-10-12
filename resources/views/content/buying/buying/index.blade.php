@@ -86,7 +86,6 @@
                                         @endif
                                     </td>
                                     <td class="text-right">
-                                        {{-- {{ $data->subtotal }} --}}
                                         {{ number_format($data->subtotal, 0, '.', ',') }}
                                     </td>
                                     <td>

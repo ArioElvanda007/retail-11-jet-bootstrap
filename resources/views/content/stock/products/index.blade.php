@@ -27,7 +27,6 @@
                                 <th>Sell Price</th>
                                 <th>Stock</th>
                                 <th>Descript</th>
-                                <th>Created</th>
                                 <th>Updated</th>
                                 <th class="d-print-none">#</th>
                             </tr>
@@ -41,20 +40,17 @@
                                     <td>
                                         {{ $data->name }}
                                     </td>
-                                    <td>
-                                        {{ $data->price_buy }}
+                                    <td class="text-right">
+                                        {{ number_format($data->price_buy, 0, '.', ',') }}
                                     </td>
-                                    <td>
-                                        {{ $data->price_sell }}
+                                    <td class="text-right">
+                                        {{ number_format($data->price_sell, 0, '.', ',') }}
                                     </td>
-                                    <td>
-                                        {{ $data->stock }}
+                                    <td class="text-right">
+                                        {{ number_format($data->stock, 0, '.', ',') }}
                                     </td>
                                     <td>
                                         {{ $data->description }}
-                                    </td>
-                                    <td>
-                                        {{ $data->created_at }}
                                     </td>
                                     <td>
                                         {{ $data->updated_at }}

@@ -16,11 +16,8 @@ class BuyingController extends Controller
 {
     private function GenerateCode($date = '')
     {
-        if ($date == '') {
-            $date = Carbon::now();
-        } else {
-            $date = Carbon::parse($date);
-        }
+        if ($date == '') { $date = Carbon::now();
+        } else { $date = Carbon::parse($date); }
 
         $result = Buying::whereDate('date_input', '=', $date->format('Y-m-d'))->count() + 1;
         $result = "PO-" . $date->format('ymd') . "-" . substr("0000{$result}", -4);
