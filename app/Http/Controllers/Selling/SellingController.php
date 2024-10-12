@@ -14,10 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SellingController extends Controller
 {
-    private function GenerateCode()
+    private function GenerateCode($date = '')
     {
-        $result = Selling::whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))->count() + 1;
-        $result = "SO-" . Carbon::now()->format('ymd') . "-" . substr("0000{$result}", -4);
+        if ($date == '') { $date = Carbon::now();
+        } else { $date = Carbon::parse($date); }
+
+        $result = Selling::whereDate('date_input', '=', $date->format('Y-m-d'))->count() + 1;
+        $result = "SO-" . $date->format('ymd') . "-" . substr("0000{$result}", -4);
 
         return $result;
     }
@@ -34,8 +37,8 @@ class SellingController extends Controller
         ];
 
         if (Request::get("date_from")) {
-            $date_from = Carbon::parse(Request::get("date_from"));
-            $date_to = Carbon::parse(Request::get("date_to"));
+            $date_from = date('Y-m-d', strtotime(Request::get('date_from')));
+            $date_to = date('Y-m-d', strtotime(Request::get('date_to')));    
         } else {
             $date_from = Carbon::now()->addDays(-31);
             $date_to = Carbon::now();
@@ -56,9 +59,9 @@ class SellingController extends Controller
             ['link' => "selling.selling.create", 'name' => "Create Selling"]
         ];
 
-        $invoice = $this->GenerateCode();
         $date_input = Carbon::now();
         $due_date = Carbon::now()->addDays(3);
+        $invoice = $this->GenerateCode($date_input);
 
         $customers = Customer::get();
         $banks = Bank::get();
@@ -72,7 +75,10 @@ class SellingController extends Controller
      */
     public function store(Request $request)
     {
-        $code = $this->GenerateCode();
+        $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+        $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
+
+        $code = $this->GenerateCode($date_input);
 
         $rate = 0;
         $subtotal = 0;
@@ -86,8 +92,8 @@ class SellingController extends Controller
         $selling = Selling::create([
             'code' => $code,
             'title' => Request::get('title'),
-            'date_input' => Request::get('date_input'),
-            'due_date' => Request::get('due_date'),
+            'date_input' => $date_input,
+            'due_date' => $due_date,
             'rate' => $rate,
             'subtotal' => $subtotal,
             'discount' => Request::get('discountTotal'),
@@ -149,6 +155,9 @@ class SellingController extends Controller
      */
     public function update(Selling $selling, Request $request)
     {
+        $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+        $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
+
         $rate = 0;
         $subtotal = 0;
         foreach (Request::get('temps') as $key => $value) {
@@ -160,8 +169,8 @@ class SellingController extends Controller
 
         $selling->update([
             'title' => Request::get('title'),
-            'date_input' => Request::get('date_input'),
-            'due_date' => Request::get('due_date'),
+            'date_input' => $date_input,
+            'due_date' => $due_date,
             'rate' => $rate,
             'subtotal' => $subtotal,
             'discount' => Request::get('discountTotal'),

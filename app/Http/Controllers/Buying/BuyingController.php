@@ -60,9 +60,9 @@ class BuyingController extends Controller
             ['link' => "buying.buying.create", 'name' => "Create Buying"]
         ];
 
-        $invoice = $this->GenerateCode();
         $date_input = Carbon::now();
         $due_date = Carbon::now()->addDays(3);
+        $invoice = $this->GenerateCode($date_input);
 
         $suppliers = Supplier::get();
         $banks = Bank::get();

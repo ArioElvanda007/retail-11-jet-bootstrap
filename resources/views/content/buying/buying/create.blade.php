@@ -292,7 +292,6 @@
                                 <th>Code</th>
                                 <th>Product</th>
                                 <th>Amount</th>
-                                <th>Stock</th>
                                 <th class="d-print-none">#</th>
                             </tr>
                         </thead>
@@ -305,11 +304,8 @@
                                     <td>
                                         {{ $data->name }}
                                     </td>
-                                    <td>
-                                        {{ $data->price_buy }}
-                                    </td>
-                                    <td>
-
+                                    <td class="text-right">
+                                        {{ number_format($data->price_buy, 0, '.', ',') }}
                                     </td>
                                     <td class="d-print-none">
                                         <button type="button" class="btn btn-primary btn-sm"
