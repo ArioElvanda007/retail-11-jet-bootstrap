@@ -11,13 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CashFlowController extends Controller
 {
-    private function GenerateCode()
+    private function GenerateCode($date = '')
     {
-        $result = CashFlow::whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))->count() + 1;
-        $result = "CF-" . Carbon::now()->format('ymd') . "-" . substr("0000{$result}", -4);
+        if ($date == '') { $date = Carbon::now();
+        } else { $date = Carbon::parse($date); }
+
+        $result = CashFlow::whereDate('date_input', '=', $date->format('Y-m-d'))->count() + 1;
+        $result = "CF-" . $date->format('ymd') . "-" . substr("0000{$result}", -4);
 
         return $result;
-    }
+    }    
 
 
 
@@ -32,8 +35,8 @@ class CashFlowController extends Controller
         ];
 
         if (Request::get("date_from")) {
-            $date_from = Carbon::parse(Request::get("date_from"));
-            $date_to = Carbon::parse(Request::get("date_to"));
+            $date_from = date('Y-m-d', strtotime(Request::get('date_from')));
+            $date_to = date('Y-m-d', strtotime(Request::get('date_to')));    
         } else {
             $date_from = Carbon::now()->addDays(-31);
             $date_to = Carbon::now();
@@ -54,8 +57,8 @@ class CashFlowController extends Controller
             ['link' => "accounting.cashflows.create", 'name' => "Create Cashflow"]
         ];
 
-        $invoice = $this->GenerateCode();
         $date_input = Carbon::now();
+        $invoice = $this->GenerateCode($date_input);
 
         $banks = Bank::get();
 
@@ -67,12 +70,13 @@ class CashFlowController extends Controller
      */
     public function store(Request $request)
     {
-        $code = $this->GenerateCode();
+        $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+        $code = $this->GenerateCode($date_input);
 
         $cashflow = CashFlow::create([
             'code' => $code,
             'title' => Request::get('title'),
-            'date_input' => Request::get('date_input'),
+            'date_input' => $date_input,
             'debet' => Request::get('debet'),
             'credit' => Request::get('credit'),
             'bank_id' => Request::get('bank_id'),
@@ -114,9 +118,11 @@ class CashFlowController extends Controller
      */
     public function update(CashFlow $cashflow, Request $request)
     {
+        $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
+
         $cashflow->update([
             'title' => Request::get('title'),
-            'date_input' => Request::get('date_input'),
+            'date_input' => $date_input,
             'debet' => Request::get('debet'),
             'credit' => Request::get('credit'),
             'bank_id' => Request::get('bank_id'),
