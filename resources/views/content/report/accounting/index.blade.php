@@ -14,8 +14,14 @@
                     <div class="row">
                         <div class="col-md-3 col-6 mb-2">
                             <label class="form-label fs-5" for="date_from">Date From</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from" placeholder="Date From"
-                                value="{{ date('Y-m-d', strtotime($date_from)) }}" required />
+                            
+                            <div class="input-group date" id="show_date_from" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#show_date_from" id="date_from" name="date_from" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_from)) }}"
+                                required/>
+                                <div class="input-group-append" data-target="#show_date_from" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-2">
@@ -66,8 +72,21 @@
     <!-- /.content -->
 @endsection
 
+@section('page-style')
+    <!-- / datetimepicker -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+@endsection
+
 @section('page-script')
+    <!-- / datetimepicker -->
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <script>
+        $('#show_date_from').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
         function show() {
             document.getElementById('dataView').hidden = true;
 
@@ -141,10 +160,10 @@
                             }
                             else {
                                 if (parseFloat(res[index]['debet']) < 0) {
-                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['debet']) + '</th>';
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['debet'], 0) + '</th>';
                                 }
                                 else {
-                                    html += '<th class="text-right">' + formatNumber(res[index]['debet']) + '</th>';
+                                    html += '<th class="text-right">' + formatNumber(res[index]['debet'], 0) + '</th>';
                                 }
                             }
 
@@ -156,10 +175,10 @@
                             }
                             else {
                                 if (parseFloat(res[index]['credit']) < 0) {
-                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['credit']) + '</th>';
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['credit'], 0) + '</th>';
                                 }
                                 else {
-                                    html += '<th class="text-right">' + formatNumber(res[index]['credit']) + '</th>';
+                                    html += '<th class="text-right">' + formatNumber(res[index]['credit'], 0) + '</th>';
                                 }                            
                             }
 
@@ -167,10 +186,10 @@
 
 
                             if (balance < 0) {
-                                html += '<th class="text-right text-danger">' + balance.toLocaleString() + '</th>';
+                                html += '<th class="text-right text-danger">' + formatNumber(balance, 0) + '</th>';
                             }
                             else {
-                                html += '<th class="text-right">' + balance.toLocaleString() + '</th>';
+                                html += '<th class="text-right">' + formatNumber(balance, 0) + '</th>';
                             }  
 
                             $('#use-tBody').append(html);            
@@ -187,9 +206,9 @@
                                     '<span class="info-box-number">' +
                                         '<small>Rp.</small> ';
                                         if (parseFloat($iSumBeginning) < 0) {
-                                            html2 += '<span class="text-right text-danger">' + $iSumBeginning.toLocaleString() + '</span>';
+                                            html2 += '<span class="text-right text-danger">' + formatNumber($iSumBeginning, 0) + '</span>';
                                         } else {
-                                            html2 += '<span>' + $iSumBeginning.toLocaleString() + '</span>';
+                                            html2 += '<span>' + formatNumber($iSumBeginning, 0) + '</span>';
                                         }
 
                                         html2 += 
@@ -206,9 +225,9 @@
                                     '<span class="info-box-number">' +
                                         '<small>Rp.</small> ';
                                         if (parseFloat($SumDebet) < 0) {
-                                            html2 += '<span class="text-right text-danger">' + $SumDebet.toLocaleString() + '</span>';
+                                            html2 += '<span class="text-right text-danger">' + formatNumber($SumDebet, 0) + '</span>';
                                         } else {
-                                            html2 += '<span>' + $SumDebet.toLocaleString() + '</span>';
+                                            html2 += '<span>' + formatNumber($SumDebet, 0) + '</span>';
                                         }
 
                                         html2 += 
@@ -228,9 +247,9 @@
                                     '<span class="info-box-number">' +
                                         '<small>Rp.</small> ';
                                         if (parseFloat($SumCredit) < 0) {
-                                            html2 += '<span class="text-right text-danger">' + $SumCredit.toLocaleString() + '</span>';
+                                            html2 += '<span class="text-right text-danger">' + formatNumber($SumCredit, 0) + '</span>';
                                         } else {
-                                            html2 += '<span>' + $SumCredit.toLocaleString() + '</span>';
+                                            html2 += '<span>' + formatNumber($SumCredit, 0) + '</span>';
                                         }
 
                                         html2 +=                                         
@@ -247,9 +266,9 @@
                                     '<span class="info-box-number">' +
                                         '<small>Rp.</small> ';
                                         if (parseFloat($iSumBeginning + $SumDebet - $SumCredit) < 0) {
-                                            html2 += '<span class="text-right text-danger">' + ($iSumBeginning + $SumDebet - $SumCredit).toLocaleString() + '</span>';
+                                            html2 += '<span class="text-right text-danger">' + formatNumber($iSumBeginning + $SumDebet - $SumCredit, 0) + '</span>';
                                         } else {
-                                            html2 += '<span>' + ($iSumBeginning + $SumDebet - $SumCredit).toLocaleString() + '</span>';
+                                            html2 += '<span>' + formatNumber($iSumBeginning + $SumDebet - $SumCredit, 0) + '</span>';
                                         }
 
                                         html2 +=                                         

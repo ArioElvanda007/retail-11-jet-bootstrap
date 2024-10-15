@@ -14,8 +14,14 @@
                     <div class="row">
                         <div class="col-md-3 col-6 mb-2">
                             <label class="form-label fs-5" for="date_from">Date From</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from" placeholder="Date From"
-                                value="{{ date('Y-m-d', strtotime($date_from)) }}" required />
+                            
+                            <div class="input-group date" id="show_date_from" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#show_date_from" id="date_from" name="date_from" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_from)) }}"
+                                required/>
+                                <div class="input-group-append" data-target="#show_date_from" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-2">
@@ -57,8 +63,21 @@
     <!-- /.content -->
 @endsection
 
+@section('page-style')
+    <!-- / datetimepicker -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+@endsection
+
 @section('page-script')
+    <!-- / datetimepicker -->
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <script>
+        $('#show_date_from').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
         selectType(document.getElementById('type').value);
 
         function show() {
@@ -97,13 +116,13 @@
                             let sCredit = 0;
 
                             for (let col = 1; col <= 31; col++) {  
-                                sDebet = formatNumber(res[index]['debet_date' + col.toString().padStart(2, '0')]);
+                                sDebet = formatNumber(res[index]['debet_date' + col.toString().padStart(2, '0')], 0);
                                 if (sDebet == 0) { sDebet = ""; }   
 
-                                sCredit = formatNumber(res[index]['credit_date' + col.toString().padStart(2, '0')]);
+                                sCredit = formatNumber(res[index]['credit_date' + col.toString().padStart(2, '0')], 0);
                                 if (sCredit == 0) { sCredit = ""; }   
                                 
-                                sCashflows = formatNumber(parseFloat(res[index]['debet_date' + col.toString().padStart(2, '0')]) - parseFloat(res[index]['credit_date' + col.toString().padStart(2, '0')]));
+                                sCashflows = formatNumber(parseFloat(res[index]['debet_date' + col.toString().padStart(2, '0')]) - parseFloat(res[index]['credit_date' + col.toString().padStart(2, '0')]), 0);
                                 if (sCashflows == 0) { sCashflows = ""; }   
                                 
 

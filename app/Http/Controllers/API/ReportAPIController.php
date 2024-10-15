@@ -26,18 +26,24 @@ class ReportAPIController extends Controller
 
     public function selling($fromDate, $type)
     {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+
         $query = DB::select("CALL spReportSelling('$fromDate')");
         return response()->json($query);
     }  
     
     public function cashflows($fromDate, $type)
     {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+
         $query = DB::select("CALL spReportCashflow('$fromDate')");
         return response()->json($query);
     }  
     
     public function accounting($fromDate, $toDate)
     {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+        
         $query = DB::select("CALL spReportJournal('$fromDate', '$toDate')");
         return response()->json($query);
     }      
