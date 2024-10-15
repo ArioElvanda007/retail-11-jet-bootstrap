@@ -18,6 +18,8 @@ class ReportAPIController extends Controller
     
     public function buying($fromDate, $type)
     {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+
         $query = DB::select("CALL spReportBuying('$fromDate')");
         return response()->json($query);
     }    
