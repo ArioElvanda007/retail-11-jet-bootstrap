@@ -75,10 +75,10 @@
                                         {{ date('d-M-Y', strtotime($data->date_input)) }}
                                     </td>
                                     <td>
-                                        {{ $data['products']['code'] }}
+                                        {{-- {{ $data['products']['code'] }} --}}
                                     </td>
                                     <td>
-                                        {{ $data['products']['name'] }}
+                                        {{-- {{ $data['products']['name'] }} --}}
                                     </td>
                                     <td class="text-right">
                                         {{ number_format($data->stock, 0, '.', ',') }}
