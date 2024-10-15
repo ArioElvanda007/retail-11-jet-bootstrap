@@ -55,6 +55,7 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Date Input</th>
+                                <th>Code</th>
                                 <th>Product</th>
                                 <th>Stock</th>
                                 <th>Rate</th>
@@ -74,7 +75,10 @@
                                         {{ date('d-M-Y', strtotime($data->date_input)) }}
                                     </td>
                                     <td>
-                                        {{ $data['products'] }}
+                                        {{ $data->code }}
+                                    </td>
+                                    <td>
+                                        {{ $data->name }}
                                     </td>
                                     <td class="text-right">
                                         {{ number_format($data->stock, 0, '.', ',') }}

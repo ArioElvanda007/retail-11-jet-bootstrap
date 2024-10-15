@@ -26,11 +26,27 @@ class StockController extends Controller
             $date_from = date('Y-m-d', strtotime(Request::get('date_from')));
             $date_to = date('Y-m-d', strtotime(Request::get('date_to')));  
         } else {
-            $date_from = Carbon::now()->addDays(-31);
-            $date_to = Carbon::now();
+            $date_from = date('Y-m-d', strtotime(Carbon::now()->addDays(-31)));
+            $date_to = date('Y-m-d', strtotime(Carbon::now()));
         }
 
-        $query = Stock::with('products', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
+        // dd([$date_from, $date_to]);
+
+        // $query = Stock::with('products', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
+        $query = DB::select(
+            "SELECT 
+                A.id, A.prod_id, B.code, B.name, A.title, A.date_input, A.stock, A.rate, A.adjust, A.note, A.user_id, C.name AS user_entry, A.created_at, A.updated_at
+            FROM
+                stocks AS A
+            LEFT OUTER JOIN
+                products AS B ON A.prod_id = B.id
+            LEFT OUTER JOIN
+                users AS C ON A.user_id = C.id
+            WHERE DATE(A.date_input) BETWEEN '$date_from' AND '$date_to'
+        ");
+
+        // dd($query);
+
         return view('content.stock.stocks.index', compact('query', 'date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);               
     }
 
