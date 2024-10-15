@@ -31,6 +31,7 @@ class StockController extends Controller
         }
 
         $query = Stock::with('products', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
+        dd($query);
         return view('content.stock.stocks.index', compact('query', 'date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);               
     }
 
