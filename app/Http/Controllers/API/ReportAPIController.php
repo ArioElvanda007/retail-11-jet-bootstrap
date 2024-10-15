@@ -10,6 +10,8 @@ class ReportAPIController extends Controller
 {
     public function stock($fromDate, $type)
     {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+
         $query = DB::select("CALL spReportStock('$fromDate')");
         return response()->json($query);
     }  
