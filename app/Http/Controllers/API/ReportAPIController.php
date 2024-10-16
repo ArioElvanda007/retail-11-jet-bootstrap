@@ -43,6 +43,7 @@ class ReportAPIController extends Controller
     public function accounting($fromDate, $toDate)
     {
         $fromDate = date('Y-m-d', strtotime($fromDate));
+        $toDate = date('Y-m-d', strtotime($toDate));
         
         $query = DB::select("CALL spReportJournal('$fromDate', '$toDate')");
         return response()->json($query);

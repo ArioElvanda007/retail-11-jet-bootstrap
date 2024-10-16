@@ -26,15 +26,33 @@
 
                         <div class="col-md-3 col-6 mb-2">
                             <label class="form-label fs-5" for="date_to">Date To</label>
-                            <input type="date" class="form-control" id="date_to" name="date_from" placeholder="Date To"
-                                value="{{ date('Y-m-d', strtotime($date_to)) }}" required />
+                            {{-- <input type="date" class="form-control" id="date_to" name="date_to" placeholder="Date To"
+                                value="{{ date('Y-m-d', strtotime($date_to)) }}" required /> --}}
+
+                            <div class="input-group date" id="show_date_to" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#show_date_to" id="date_to" name="date_to" placeholder="DD-MMM-YYYY" value="{{ date('d-M-Y', strtotime($date_to)) }}"
+                                required/>
+                                <div class="input-group-append" data-target="#show_date_to" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-2 d-flex align-items-end">
-                            <button type="button" id="btnSearch" name="btnSearch" class="btn btn-primary show"
-                                onclick='show()'>
-                                <i class="fa fa-search"></i>
-                            </button>
+                            <div class="d-flex flex-row">
+                                <button type="button" id="btnSearch" name="btnSearch" class="btn btn-primary show"
+                                    onclick='show()'>
+                                    <i class="fa fa-search"></i>
+                                </button>
+
+                                <div class="ms-4 mt-2">
+                                    <div class="ms-4">
+                                        <input class="form-check-input" type="checkbox" id="is_value"
+                                            name="is_value" value = "1"/>
+                                        <label for="is_value" class="form-check-label">Only Value</label>
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-2"></div>                        
@@ -87,6 +105,41 @@
             format: 'DD-MMM-YYYY'
         });
 
+        $('#show_date_to').datetimepicker({
+            format: 'DD-MMM-YYYY'
+        });
+
+        $is_value = true;
+        document.getElementById("is_value").checked = $is_value;
+
+        $('#is_value').click(function(){
+            if($(this).is(':checked')){
+                $is_value = true;
+            } else {
+                $is_value = false;
+            }
+
+            // get value from table with loop
+            var table = document.getElementById("use-tBody");       
+            let iRow = -1;    
+            for (let row of table.rows) 
+            {       
+                iRow += 1;         
+                if ($is_value == true) {
+                    let debet = row.cells[2].innerText;
+                    let credit = row.cells[3].innerText;
+
+                    if (debet == "0" && credit == "0") {     
+                        document.getElementById("rowCount_" + iRow).classList.add('hidden');
+                    }
+                }
+                else 
+                {
+                    document.getElementById("rowCount_" + iRow).classList.remove('hidden');
+                }
+            }            
+        });
+
         function show() {
             document.getElementById('dataView').hidden = true;
 
@@ -127,7 +180,7 @@
                             } 
 
                             var html = 
-                                '<tr>';
+                                '<tr class="rowCount" id="rowCount_' + index + '" name="rowCount_' + index + '">';
 
 
 
@@ -186,14 +239,40 @@
 
 
                             if (balance < 0) {
+                                // if (index == res.length - 1) {
+                                //     html += '<th class="text-right text-danger" style="background-color: #a9e664">' + formatNumber(balance, 0) + '</th>';
+                                // }
+                                // else {
+                                //     html += '<th class="text-right text-danger">' + formatNumber(balance, 0) + '</th>';
+                                // }
+
                                 html += '<th class="text-right text-danger">' + formatNumber(balance, 0) + '</th>';
                             }
                             else {
+                                // if (index == res.length - 1) {
+                                //     html += '<th class="text-right" style="background-color: #a9e664">' + formatNumber(balance, 0) + '</th>';
+                                // }
+                                // else {
+                                //     html += '<th class="text-right">' + formatNumber(balance, 0) + '</th>';
+                                // }
+
                                 html += '<th class="text-right">' + formatNumber(balance, 0) + '</th>';
                             }  
 
-                            $('#use-tBody').append(html);            
+                            $('#use-tBody').append(html);      
+                            
+                            
+                            if (res[index]['description'] != 'Begining') {
+                                if (res[index]['debet'] == 0 && res[index]['credit'] == 0) {
+                                    if ($is_value == true) { document.getElementById("rowCount_" + index).classList.add('hidden'); }
+                                    else if ($is_value == false) { document.getElementById("rowCount_" + index).classList.remove('hidden'); }
+                                }
+                            }
                         }
+
+
+
+
 
                         // fill box *******************
                         var html2 =
@@ -320,7 +399,7 @@
             var html = 
                 '<tr>' +
                     '<th>Date</th>' +
-                    '<th>Description</th>' +
+                    '<th class="w-full">Description</th>' +
                     '<th>Debet</th>' +
                     '<th>Credit</th>' +
                     '<th>Balance</th>' +
