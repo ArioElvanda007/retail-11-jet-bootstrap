@@ -17,20 +17,23 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="" required />
+                                    <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" id="name" name="name" placeholder="Name" value="{{ old('name') }}" required />
+
+                                    <div class="invalid-feedback mt-2">{{ $errors->first('name') }}</div>                                        
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label" for="name">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="user@example.com" value="" required />
+                                    <input type="email" class="form-control @if($errors->has('email')) is-invalid @endif" id="email" name="email" placeholder="user@example.com" value="{{ old('email') }}" required />
+
+                                    <div class="invalid-feedback mt-2">{{ $errors->first('email') }}</div>                                        
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label" for="name">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password"
-                                        placeholder="Password" value="" required />
+                                    <input type="password" class="form-control @if($errors->has('password')) is-invalid @endif" id="password" name="password" placeholder="Password" value="{{ old('password') }}" required />
+
+                                    <div class="invalid-feedback mt-2">{{ $errors->first('password') }}</div>                                        
                                 </div>
                             </div>
                             <div class="col-md-6">

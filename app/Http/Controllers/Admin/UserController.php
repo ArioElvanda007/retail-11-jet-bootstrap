@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Models\Model_Has_Role;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
@@ -41,6 +44,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make(Request::all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', Rules\Password::defaults()],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.users.create')->withErrors($validator)->withInput();
+        }
+
         $user = User::create([
             'name' => Request::get('name'),
             'email' => Request::get('email'),
@@ -56,6 +69,16 @@ class UserController extends Controller
                 ]);
             }
         }
+        else {
+            $role = Role::where('name', '=', 'admin')->first();
+            if ($role) {
+                Model_Has_Role::create([
+                    'role_id' => $role->id,
+                    'model_type' => 'App\Models\User',
+                    'model_id' => $user->id,
+                ]);
+            }
+        }        
 
         return redirect()->route('admin.users.index');        
     }
@@ -83,6 +106,7 @@ class UserController extends Controller
             'email' => $user->email,
             'roles' => $user->roles->pluck('id'),
         ];
+        
         $roles = Role::orderBy('name')->get();
         return view('content.admin.users.edit', compact('query', 'roles'), ['breadcrumbs' => $breadcrumbs]);        
     }
@@ -92,17 +116,27 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request)
     {
+        $validator = Validator::make(Request::all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'max:255'],
+            'password' => ['required', Rules\Password::defaults()],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.users.edit', $user->id)->withErrors($validator)->withInput();
+        }
+
         $user->update(Request::only('name', 'email'));
 
         if (Request::get('password')) {
             $user->update(['password' => Request::get('password')]);
         }
 
-        if (Request::get('roles')) {
-            // reset
-            Model_Has_Role::where('model_id', '=', $user->id)->delete();
+        // reset
+        Model_Has_Role::where('model_id', '=', $user->id)->delete();
 
-            // re - insert
+        // re - insert
+        if (Request::get('roles')) {
             foreach (Request::get('roles') as $key => $value) {
                 Model_Has_Role::create([
                     'role_id' => $value,
@@ -111,6 +145,16 @@ class UserController extends Controller
                 ]);
             }
         }
+        else {
+            $role = Role::where('name', '=', 'admin')->first();
+            if ($role) {
+                Model_Has_Role::create([
+                    'role_id' => $role->id,
+                    'model_type' => 'App\Models\User',
+                    'model_id' => $user->id,
+                ]);
+            }
+        }  
 
         return redirect()->route('admin.users.index');
     }
