@@ -52,12 +52,10 @@
                                             <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
                                         </a>
 
-                                        @if ($data->id != 1)
-                                            <a onclick="return confirm('Are you sure?')"
-                                                href="{{ route('accounting.accounts.destroy', $data->id) }}">
-                                                <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
-                                            </a>
-                                        @endif
+                                        <a onclick="return confirm('Are you sure?')"
+                                            href="{{ route('accounting.accounts.destroy', $data->id) }}">
+                                            <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
