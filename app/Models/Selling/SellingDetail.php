@@ -12,6 +12,7 @@ class SellingDetail extends Model
     protected $fillable = [
         'selling_id',
         'prod_id',
+        'cogs',
         'rate',
         'amount',
         'discount',

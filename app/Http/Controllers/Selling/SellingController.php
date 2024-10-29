@@ -105,9 +105,12 @@ class SellingController extends Controller
 
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
+                $products = Product::where('id', '=', $value['id'])->first();
+
                 SellingDetail::create([
                     'selling_id' => $selling->id,
                     'prod_id' => $value['id'],
+                    'cogs' => $products->price_buy, 
                     'rate' => $value['rate'],
                     'amount' => $value['amount'],
                     'discount' => $value['discount'],
@@ -183,9 +186,12 @@ class SellingController extends Controller
         SellingDetail::where('selling_id', '=', $selling->id)->delete();
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
+                $products = Product::where('id', '=', $value['id'])->first();
+
                 SellingDetail::create([
                     'selling_id' => $selling->id,
                     'prod_id' => $value['id'],
+                    'cogs' => $products->price_buy, 
                     'rate' => $value['rate'],
                     'amount' => $value['amount'],
                     'discount' => $value['discount'],
