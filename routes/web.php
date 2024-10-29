@@ -31,6 +31,7 @@ use App\Http\Controllers\Selling\SellingController;
 
 use App\Http\Controllers\Accounting\BankController;
 use App\Http\Controllers\Accounting\CashFlowController;
+use App\Http\Controllers\Accounting\AccountController;
 
 use App\Http\Controllers\Report\Stock\ReportStockController;
 use App\Http\Controllers\Report\Buying\ReportBuyingController;
@@ -113,6 +114,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     });
 
     Route::prefix('accounting')->name('accounting.')->middleware(['can:manage accounting'])->group(function () {
+        Route::prefix('accounts')->name('accounts.')->group(function () {
+            Route::get('/', [AccountController::class, 'index'])->name('index');
+            Route::get('/create', [AccountController::class, 'create'])->name('create');
+            Route::post('/', [AccountController::class, 'store'])->name('store');
+            Route::get('/edit/{account}', [AccountController::class, 'edit'])->name('edit');
+            Route::post('{account}', [AccountController::class, 'update'])->name('update');
+            Route::get('{account}', [AccountController::class, 'destroy'])->name('destroy');
+        });     
+        
         Route::prefix('banks')->name('banks.')->group(function () {
             Route::get('/', [BankController::class, 'index'])->name('index');
             Route::get('/create', [BankController::class, 'create'])->name('create');

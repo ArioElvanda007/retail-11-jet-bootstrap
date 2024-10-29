@@ -64,6 +64,16 @@
 
                         @can('manage accounting')
                             <li class="nav-item">
+                                <a href="{{ route('accounting.accounts.index') }}"
+                                    class="nav-link {{ request()->routeIs('accounting.accounts.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-list"></i>
+                                    <p>
+                                        Accounts
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('accounting.banks.index') }}"
                                     class="nav-link {{ request()->routeIs('accounting.banks.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-university"></i>
