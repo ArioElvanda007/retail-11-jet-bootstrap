@@ -10,6 +10,7 @@ use App\Models\Model_Has_Role;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -79,6 +80,12 @@ class UserController extends Controller
                 ]);
             }
         }        
+
+        if (Request::get('is_send') == 1) {
+            event(new Registered($user));
+        } else {
+            $user->update(['email_verified_at' => Carbon::now()]);
+        }
 
         return redirect()->route('admin.users.index');        
     }
@@ -156,6 +163,10 @@ class UserController extends Controller
             }
         }  
 
+        if (Request::get('is_send') == 1) {
+            event(new Registered($user));
+        }
+
         return redirect()->route('admin.users.index');
     }
 
@@ -172,4 +183,23 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index');
     }
+
+    public function resend(User $user)
+    {
+        event(new Registered($user));
+        return redirect()->route('admin.users.index')->with('message', 'resend success');;       
+    }  
+    
+    public function verify(User $user)
+    {
+        if ($user->email_verified_at == null) {
+            $user->update(['email_verified_at' => Carbon::now()]);
+            return redirect()->route('admin.users.index')->with('message', 'verify success');;           
+        }
+        else
+        {
+            $user->update(['email_verified_at' => null]);
+            return redirect()->route('admin.users.index')->with('message', 'unverify success');;           
+        }
+    }      
 }

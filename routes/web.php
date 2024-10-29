@@ -186,6 +186,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit');
             Route::post('{user}', [UserController::class, 'update'])->name('update');
             Route::get('{user}', [UserController::class, 'destroy'])->name('destroy');
+            Route::get('/resend/{user}', [UserController::class, 'resend'])->name('resend');
+            Route::get('/verify/{user}', [UserController::class, 'verify'])->name('verify');
         });
 
         Route::prefix('roles')->name('roles.')->group(function () {

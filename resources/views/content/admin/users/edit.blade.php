@@ -53,6 +53,11 @@
 
                     <div class="p-2 card-footer d-print-none">
                         <div class="d-flex justify-content-end">
+                            <div class="form-check mt-1 mr-4">
+                                <input class="form-check-input" type="checkbox" id="is_send"
+                                    name="is_send" value = "1" />
+                                <label for="is_send" class="form-check-label">Send Mail</label>
+                            </div>
                             <button class="btn btn-warning me-2" type="submit">
                                 <i class="fa fa-save"></i>
                                 <span class="ms-2">Save</span>

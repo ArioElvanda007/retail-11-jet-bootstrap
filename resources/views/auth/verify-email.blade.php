@@ -1,7 +1,9 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            {{-- <x-authentication-card-logo /> --}}
+
+            <img src="{{ asset('logo.ico') }}" alt="{{ config('app.description', 'Retail-ERP3') }} Logo" width="50" height="50">
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600">
@@ -26,16 +28,17 @@
             </form>
 
             <div>
-                <a
+                {{-- <a
                     href="{{ route('profile.show') }}"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    {{ __('Edit Profile') }}</a>
+                    {{ __('Edit Profile') }}</a> --}}
 
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
 
-                    <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2">
+                    <button type="submit"
+                        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2">
                         {{ __('Log Out') }}
                     </button>
                 </form>
