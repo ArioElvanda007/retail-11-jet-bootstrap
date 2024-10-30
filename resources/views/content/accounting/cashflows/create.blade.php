@@ -35,6 +35,17 @@
                                     </div>
 
                                     <div class="col-md-12 mt-3">
+                                        <label class="form-label fs-5" for="account_id">Account</label>
+                                        <select class="mt-2 form-control accountSelect2" style="width: 100%;"
+                                            name="account_id" id="account_id" required>
+                                            @foreach ($accounts as $account)
+                                                <option value="{{ $account->id }}" @if ($account->name == 'CASHFLOW') selected @endif>
+                                                    {{ $account->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12 mt-3">
                                         <label class="form-label fs-5" for="title">Title</label>
                                         <input type="text" class="form-control" id="title" name="title"
                                             placeholder="Title" value="" autofocus required />
@@ -115,6 +126,10 @@
         });
 
         $('.bankSelect2').select2({
+            theme: 'bootstrap4'
+        })
+
+        $('.accountSelect2').select2({
             theme: 'bootstrap4'
         })
 

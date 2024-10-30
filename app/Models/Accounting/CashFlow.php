@@ -30,6 +30,11 @@ class CashFlow extends Model
         return $this->belongsTo('App\Models\Accounting\Bank', 'bank_id');
     }
 
+    public function accounts()
+    {
+        return $this->belongsTo('App\Models\Accounting\Account', 'account_id');
+    }
+
     public function getCreatedAtAttribute()
     {
         return \Carbon\Carbon::parse($this->attributes['created_at'])->diffForHumans();

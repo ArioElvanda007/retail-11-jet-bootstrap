@@ -55,6 +55,7 @@
                             <tr>
                                 <th>Slip</th>
                                 <th>Date</th>
+                                <th>Account</th>
                                 <th>Title</th>
                                 <th>Debet</th>
                                 <th>Credit</th>
@@ -72,6 +73,9 @@
                                     </td>
                                     <td>
                                         {{ date('d-M-Y', strtotime($data->date_input)) }}
+                                    </td>
+                                    <td>
+                                        {{ $data->accounts->name }}
                                     </td>
                                     <td>
                                         {{ $data->title }}

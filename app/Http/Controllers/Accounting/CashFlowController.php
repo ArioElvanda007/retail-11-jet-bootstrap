@@ -8,6 +8,7 @@ use App\Models\Accounting\CashFlow;
 use App\Models\Accounting\Bank;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Accounting\Account;
 
 class CashFlowController extends Controller
 {
@@ -42,7 +43,7 @@ class CashFlowController extends Controller
             $date_to = Carbon::now();
         }
 
-        $query = CashFlow::with('banks', 'users')->whereBetween('date_input', [$date_from, $date_to])->get();
+        $query = CashFlow::with('banks', 'users', 'accounts')->whereBetween('date_input', [$date_from, $date_to])->get();
         return view('content.accounting.cashflows.index', compact('query', 'date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
@@ -61,8 +62,9 @@ class CashFlowController extends Controller
         $invoice = $this->GenerateCode($date_input);
 
         $banks = Bank::get();
+        $accounts = Account::orderBy('seq', 'asc')->get();
 
-        return view('content.accounting.cashflows.create', compact('invoice', 'date_input', 'banks'), ['breadcrumbs' => $breadcrumbs]);        
+        return view('content.accounting.cashflows.create', compact('invoice', 'date_input', 'banks', 'accounts'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**
@@ -75,8 +77,9 @@ class CashFlowController extends Controller
 
         $cashflow = CashFlow::create([
             'code' => $code,
-            'title' => Request::get('title'),
             'date_input' => $date_input,
+            'account_id' => Request::get('account_id'),
+            'title' => Request::get('title'),
             'debet' => Request::get('debet'),
             'credit' => Request::get('credit'),
             'bank_id' => Request::get('bank_id'),
@@ -109,8 +112,9 @@ class CashFlowController extends Controller
 
         $query = CashFlow::with('banks')->where('id', '=', $cashflow->id)->first();
         $banks = Bank::get();
+        $accounts = Account::orderBy('seq', 'asc')->get();
 
-        return view('content.accounting.cashflows.edit', compact('query', 'banks'), ['breadcrumbs' => $breadcrumbs]);         
+        return view('content.accounting.cashflows.edit', compact('query', 'banks', 'accounts'), ['breadcrumbs' => $breadcrumbs]);         
     }
 
     /**
@@ -123,6 +127,7 @@ class CashFlowController extends Controller
         $cashflow->update([
             'title' => Request::get('title'),
             'date_input' => $date_input,
+            'account_id' => Request::get('account_id'),
             'debet' => Request::get('debet'),
             'credit' => Request::get('credit'),
             'bank_id' => Request::get('bank_id'),
