@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('seq')->default(0);
             $table->string('code', 25);
-            $table->string('name', 25);
+            $table->string('name', 30);
             $table->string('position', 6)->nullable(); //DEBET or CREDIT
             $table->string('description')->nullable();
             $table->timestamps();
