@@ -48,4 +48,13 @@ class ReportAPIController extends Controller
         $query = DB::select("CALL spReportJournal('$fromDate', '$toDate')");
         return response()->json($query);
     }      
+
+    public function ledger($fromDate, $toDate, $opt)
+    {
+        $fromDate = date('Y-m-d', strtotime($fromDate));
+        $toDate = date('Y-m-d', strtotime($toDate));
+        
+        $query = DB::select("CALL spReportLedger('$fromDate', '$toDate', $opt)");
+        return response()->json($query);
+    }      
 }

@@ -37,16 +37,6 @@ class AccountSeeder extends Seeder
         DB::table('accounts')->insert([
             'seq' => 3,
             'code' => '0003',
-            'name' => 'PURCHASE',
-            'position' => 'CREDIT',
-            'description' => 'BUYING TRANSACTION',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-
-        DB::table('accounts')->insert([
-            'seq' => 4,
-            'code' => '0004',
             'name' => 'SALES',
             'position' => 'DEBET',
             'description' => 'SELLING TRANSACTION',
@@ -55,11 +45,21 @@ class AccountSeeder extends Seeder
         ]);
 
         DB::table('accounts')->insert([
-            'seq' => 5,
-            'code' => '0005',
+            'seq' => 4,
+            'code' => '0004',
             'name' => 'HPP (Harga Pokok Penjualan)',
             'position' => 'CREDIT',
             'description' => 'COGS',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        DB::table('accounts')->insert([
+            'seq' => 5,
+            'code' => '0005',
+            'name' => 'PURCHASE',
+            'position' => 'CREDIT',
+            'description' => 'BUYING TRANSACTION',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

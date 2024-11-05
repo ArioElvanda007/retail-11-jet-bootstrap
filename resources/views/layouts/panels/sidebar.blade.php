@@ -189,6 +189,16 @@
                                     </p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('report.ledger.index') }}"
+                                    class="nav-link {{ request()->routeIs('report.ledger.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Ledger
+                                    </p>
+                                </a>
+                            </li>
                         @endcan  
 
 

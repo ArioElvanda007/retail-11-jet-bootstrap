@@ -38,6 +38,7 @@ use App\Http\Controllers\Report\Buying\ReportBuyingController;
 use App\Http\Controllers\Report\Selling\ReportSellingController;
 use App\Http\Controllers\Report\Cashflows\ReportCashflowController;
 use App\Http\Controllers\Report\Accounting\ReportAccountingController;
+use App\Http\Controllers\Report\Accounting\ReportLedgerController;
 
 use App\Http\Controllers\Content\Home\HeadlineController;
 
@@ -166,7 +167,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::prefix('accounting')->name('accounting.')->group(function () {
             Route::get('/', [ReportAccountingController::class, 'index'])->name('index');
-        });         
+        }); 
+
+        Route::prefix('ledger')->name('ledger.')->group(function () {
+            Route::get('/', [ReportLedgerController::class, 'index'])->name('index');
+        }); 
     });
 
 
