@@ -9,13 +9,15 @@
 
                     @if ($buss)
                         <li class="nav-item d-none d-sm-inline-block">
-                            <a href="{{ route('admin.business.index') }}" class="nav-link">{{ $buss->name }}</a>
+                            <a href="{{ route('admin.business.index') }}" class="nav-link">{{ $buss->name }} @if (env('APP_DEBUG') == 1) <span class="badge badge-danger ml-1">Debug</span> @endif
+                            </a>
                         </li>
                     @else
                         <li class="nav-item d-none d-sm-inline-block">
                             <a href="{{ route('admin.business.index') }}" class="nav-link">Bussiness not found...</a>
                         </li>
                     @endif
+
                 </ul>
 
                 <!-- Right navbar links -->

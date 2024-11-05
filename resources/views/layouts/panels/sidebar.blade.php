@@ -3,8 +3,9 @@
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
                 <img src="{{ asset('logo.ico') }}" alt="{{ config('app.description', 'Retail-ERP3') }} Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{{ config('app.description', 'Retail-ERP3') }}</span>
+                    class="brand-image img-circle elevation-0" style="opacity: .8">
+                <span class="brand-text font-weight-light">{{ config('app.name', 'Retail-ERP3') }}</span>
+                @if (env('APP_DEBUG') == 1) <span class="badge badge-danger ml-1">Debug</span> @endif
             </a>
 
             <!-- Sidebar -->
