@@ -156,16 +156,16 @@ return new class extends Migration
 
 
 
-			IF opt = 1 THEN --show ledger
+			IF opt = 1 THEN -- show ledger
 				SELECT * FROM tempAcc ORDER BY seq;            
             END IF;
 
-			IF opt = 2 THEN --show modal vs kewajiban
+			IF opt = 2 THEN -- show modal vs kewajiban
 				DELETE FROM tempAcc WHERE name NOT IN('MODAL', 'KEWAJIBAN');
 				SELECT * FROM tempAcc ORDER BY seq;            
             END IF; 
             
-			IF opt = 3 THEN --show laba rugi
+			IF opt = 3 THEN -- show laba rugi
 				DELETE FROM tempAcc WHERE name NOT IN('PURCHASE', 'SALES', 'HPP (Harga Pokok Penjualan)', 'CASHFLOW');
 				SELECT * FROM tempAcc ORDER BY seq;            
             END IF;             
