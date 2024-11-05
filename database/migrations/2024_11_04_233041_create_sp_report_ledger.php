@@ -166,7 +166,7 @@ return new class extends Migration
             END IF; 
             
 			IF opt = 3 THEN -- show laba rugi
-				DELETE FROM tempAcc WHERE name NOT IN('PURCHASE', 'SALES', 'HPP (Harga Pokok Penjualan)', 'CASHFLOW');
+				DELETE FROM tempAcc WHERE name NOT IN('SALES', 'HPP (Harga Pokok Penjualan)', 'CASHFLOW');
 				SELECT * FROM tempAcc ORDER BY seq;            
             END IF;             
         END");
