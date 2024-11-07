@@ -18,9 +18,11 @@ class DashboardController extends Controller
         ];
         
         $dateFrom = Carbon::now()->format('Y-m-d');
-        $query = DB::select("CALL spReportDashboard('$dateFrom')");
 
-        return view('content.dashboard', compact('query'), ['breadcrumbs' => $breadcrumbs]);        
+        $query = DB::select("CALL spReportDashboard('$dateFrom')");
+        $chartSPCMonthly = DB::select("CALL spChartSPCMonthly('$dateFrom')");
+
+        return view('content.dashboard', compact('query', 'chartSPCMonthly', 'dateFrom'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**
