@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permission extends Model
+class Module extends Model
 {
     use HasFactory;
-    protected $table = "permissions";
+    protected $table = "modules";
     protected $fillable = [
         'name',
-        'guard_name',
+        'description',
+        'is_active',
     ];
 
     public function getCreatedAtAttribute()
@@ -22,6 +23,5 @@ class Permission extends Model
     public function getUpdatedAtAttribute()
     {
         return \Carbon\Carbon::parse($this->attributes['updated_at'])->diffForHumans();
-    }    
-
+    }       
 }

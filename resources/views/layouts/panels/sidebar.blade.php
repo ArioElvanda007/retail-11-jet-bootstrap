@@ -245,6 +245,14 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('admin.modules.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-folder-open"></i>
+                                    <p>Modules</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('admin.business.index') }}"
                                     class="nav-link {{ request()->routeIs('admin.business.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-building"></i>

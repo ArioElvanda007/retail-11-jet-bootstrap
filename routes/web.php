@@ -44,7 +44,9 @@ use App\Http\Controllers\Content\Home\HeadlineController;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\BusinessController;
+use App\Models\Module;
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware(['can:manage dashboard']);
@@ -212,7 +214,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('edit');
             Route::post('{role}', [RoleController::class, 'update'])->name('update');
             Route::get('{role}', [RoleController::class, 'destroy'])->name('destroy');
-        });        
+        });   
+        
+        Route::prefix('modules')->name('modules.')->group(function () {
+            Route::get('/', [ModuleController::class, 'index'])->name('index');
+            Route::get('/create', [ModuleController::class, 'create'])->name('create');
+            Route::post('/', [ModuleController::class, 'store'])->name('store');
+            Route::get('/edit/{module}', [ModuleController::class, 'edit'])->name('edit');
+            Route::post('{module}', [ModuleController::class, 'update'])->name('update');
+            Route::get('{module}', [ModuleController::class, 'destroy'])->name('destroy');
+        });   
 
         Route::prefix('business')->name('business.')->group(function () {
             Route::get('/', [BusinessController::class, 'index'])->name('index');
