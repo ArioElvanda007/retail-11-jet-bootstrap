@@ -245,6 +245,14 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('admin.permissions.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-check-square"></i>
+                                    <p>Permissions</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('admin.modules.index') }}"
                                     class="nav-link {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-folder-open"></i>

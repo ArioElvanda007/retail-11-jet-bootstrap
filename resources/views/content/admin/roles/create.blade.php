@@ -25,13 +25,15 @@
                             </div>
                             <div class="col-md-6">
                                 <span class="mb-3">Permissions : </span>
-                                @foreach ($permissions as $value)
-                                    <div class="form-check mt-1">
-                                        <input class="form-check-input" type="checkbox" id="{{ $value->id }}"
-                                            name="permissions[]" value="{{ $value->id }}" />
-                                        <label for="{{ $value->id }}" class="form-check-label">{{ $value->name }}</label>
-                                    </div>
-                                @endforeach
+                                <div class="d-flex flex-wrap">
+                                    @foreach ($permissions as $value)
+                                        <div class="form-check mt-1 ml-3">
+                                            <input class="form-check-input" type="checkbox" id="{{ $value->id }}"
+                                                name="permissions[]" value="{{ $value->id }}" />
+                                            <label for="{{ $value->id }}" class="form-check-label">{{ $value->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>

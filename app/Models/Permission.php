@@ -14,6 +14,11 @@ class Permission extends Model
         'guard_name',
     ];
 
+    public function permission_has_modules()
+    {
+        return $this->hasMany('App\Models\Permission_Has_Module', 'permission_id', 'id');
+    }
+
     public function getCreatedAtAttribute()
     {
         return \Carbon\Carbon::parse($this->attributes['created_at'])->diffForHumans();

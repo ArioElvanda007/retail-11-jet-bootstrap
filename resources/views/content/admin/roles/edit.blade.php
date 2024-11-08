@@ -19,27 +19,26 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="name">Role</label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="Role name" value="{{ $query['name'] }}" required 
-                                            
-                                            @if ($query['name'] == "user" || $query['name'] == "admin")
-                                                disabled
-                                            @endif
-                                            />
+                                            placeholder="Role name" value="{{ $query['name'] }}" required
+                                            @if ($query['name'] == 'user' || $query['name'] == 'admin') disabled @endif />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <span class="mb-3">Permissions : </span>
-                                @foreach ($permissions as $value)
-                                    <div class="form-check mt-1">
-                                        <input class="form-check-input" type="checkbox" id="{{ $value->id }}"
-                                            name="permissions[]" value="{{ $value->id }}"
-                                            @foreach ($query['permissions'] as $key => $v)
+                                <div class="d-flex flex-wrap">
+                                    @foreach ($permissions as $value)
+                                        <div class="form-check mt-1 ml-3">
+                                            <input class="form-check-input" type="checkbox" id="{{ $value->id }}"
+                                                name="permissions[]" value="{{ $value->id }}"
+                                                @foreach ($query['permissions'] as $key => $v)
                                         @if ($value->id === $v) checked @endif @endforeach />
-        
-                                        <label for="{{ $value->id }}" class="form-check-label">{{ $value->name }}</label>
-                                    </div>
-                                @endforeach
+
+                                            <label for="{{ $value->id }}"
+                                                class="form-check-label">{{ $value->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,7 +54,7 @@
                                 <span class="ms-2">Cancel</span>
                             </button>
                         </div>
-                    </div>                    
+                    </div>
                 </form>
             </div>
 

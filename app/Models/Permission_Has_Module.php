@@ -14,6 +14,11 @@ class Permission_Has_Module extends Model
         'module_id',
     ];
 
+    public function modules()
+    {
+        return $this->belongsTo('App\Models\Module', 'module_id');
+    }
+
     public function getCreatedAtAttribute()
     {
         return \Carbon\Carbon::parse($this->attributes['created_at'])->diffForHumans();

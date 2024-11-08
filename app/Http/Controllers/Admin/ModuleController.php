@@ -27,7 +27,7 @@ class ModuleController extends Controller
     public function create()
     {
         $breadcrumbs = [
-            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Modules"], ['link' => "admin.modules.create", 'name' => "Create Modules"]
+            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Modules"], ['link' => "admin.modules.create", 'name' => "Create Module"]
         ];
 
         return view('content.admin.modules.create', ['breadcrumbs' => $breadcrumbs]);  
@@ -61,7 +61,7 @@ class ModuleController extends Controller
     public function edit(Module $module)
     {
         $breadcrumbs = [
-            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Modules"], ['link' => "admin/modules/edit/$module->id", 'name' => "Edit Business"]
+            ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Modules"], ['link' => "admin/modules/edit/$module->id", 'name' => "Edit Module"]
         ];
 
         $query = [

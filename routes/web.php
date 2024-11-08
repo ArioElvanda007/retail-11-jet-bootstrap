@@ -44,6 +44,7 @@ use App\Http\Controllers\Content\Home\HeadlineController;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\BusinessController;
 use App\Models\Module;
@@ -214,6 +215,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('edit');
             Route::post('{role}', [RoleController::class, 'update'])->name('update');
             Route::get('{role}', [RoleController::class, 'destroy'])->name('destroy');
+        });   
+
+        Route::prefix('permissions')->name('permissions.')->group(function () {
+            Route::get('/', [PermissionController::class, 'index'])->name('index');
+            Route::get('/edit/{permission}', [PermissionController::class, 'edit'])->name('edit');
+            Route::post('{permission}', [PermissionController::class, 'update'])->name('update');
         });   
         
         Route::prefix('modules')->name('modules.')->group(function () {
