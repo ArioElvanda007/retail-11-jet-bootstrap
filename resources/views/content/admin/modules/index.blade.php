@@ -38,8 +38,7 @@
                                         {{ $data->description }}
                                     </td>
                                     <td>
-                                        {{-- <input type="checkbox" @if ($data->is_active === 1) checked @endif disabled /> --}}
-                                        {{ $data->is_active }}
+                                        <input type="checkbox" @if ($data->is_active === "1") checked @endif disabled />
                                     </td>
                                     <td>
                                         {{ $data->updated_at }}
