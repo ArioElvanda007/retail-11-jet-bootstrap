@@ -149,7 +149,8 @@ class UserController extends Controller
         ];
         
         $roles = Role::orderBy('name')->get();
-        return view('content.admin.users.edit', compact('query', 'roles'), ['breadcrumbs' => $breadcrumbs]);        
+        $access = Access::where('user_id', '=', $user->id)->count();
+        return view('content.admin.users.edit', compact('query', 'roles', 'access'), ['breadcrumbs' => $breadcrumbs]);        
     }
 
     /**

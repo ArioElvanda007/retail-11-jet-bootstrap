@@ -46,7 +46,7 @@
                                                 @foreach ($query['roles'] as $key => $v)
                                                 @if ($value->id === $v) checked @endif 
                                                 @endforeach onclick="clickRole()" />
-                                            <label for="{{ $value->id }}" class="form-check-label" id="name_role_{{ $value->id }}">{{ $value->name }}</label>
+                                            <label for="{{ $value->id }}" class="form-check-label ml-1" id="name_role_{{ $value->id }}">{{ $value->name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -336,6 +336,10 @@
 
             document.getElementById('use-tbody').innerHTML = "";
             
+            if ({!! json_encode($access) !!} == 0) {
+                clickRole(); //show data create
+            }
+
             $.ajax({
                 dataType: 'json',
                 type: "GET",
