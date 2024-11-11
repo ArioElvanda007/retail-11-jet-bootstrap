@@ -14,6 +14,8 @@ Route::prefix('global')->group(function () {
     Route::get('select-customer/{customer}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectCustomer']);
     Route::get('select-product-id/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductID']);
     Route::get('select-product-code/{product}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectProductCode']);
+    Route::get('select-module/{typeData}/{parameter}', [App\Http\Controllers\API\GlobalAPIController::class, 'selectModule']);
+    Route::get('edit-module/{typeData}/{parameter}', [App\Http\Controllers\API\GlobalAPIController::class, 'editModule']);
 });
 
 Route::prefix('report')->group(function () {

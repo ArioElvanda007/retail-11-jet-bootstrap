@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Buying\Supplier;
 use App\Models\Selling\Customer;
 use App\Models\Stock\Product;
+use Illuminate\Support\Facades\DB;
 
 class GlobalAPIController extends Controller
 {
@@ -59,4 +60,16 @@ class GlobalAPIController extends Controller
         $query = Product::where('code', '=', $product)->first();
         return response()->json($query);
     }
+
+    public function selectModule($typeData, $parameter)
+    {
+        $query = DB::select("CALL sp_module_load('$typeData', '$parameter')");
+        return response()->json($query);
+    }  
+    
+    public function editModule($typeData, $parameter)
+    {
+        $query = DB::select("CALL sp_module_load('$typeData', '$parameter')");
+        return response()->json($query);
+    }      
 }

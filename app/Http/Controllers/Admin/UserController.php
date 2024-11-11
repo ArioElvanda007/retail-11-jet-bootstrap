@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use App\Models\Access;
 use App\Models\User;
 use App\Models\Model_Has_Role;
+use App\Models\Role_Has_Permission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
@@ -44,7 +47,7 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {        
         $validator = Validator::make(Request::all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -81,7 +84,38 @@ class UserController extends Controller
             }
         }        
 
+        // set access
+        foreach (Request::get('temps') as $key => $value) {
+            $chk_create = 0;
+            $chk_update = 0;
+            $chk_delete = 0;
+
+            if (isset($value['can_create'])) { $chk_create = 1; } else { $chk_create = 0; }
+            if (isset($value['can_update'])) { $chk_update = 1; } else { $chk_update = 0; }
+            if (isset($value['can_delete'])) { $chk_delete = 1; } else { $chk_delete = 0; }
+
+            if ($chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
+                $role_has_permissions = Role_Has_Permission::where('permission_id', '=', $value['permission_id'])->get();
+                foreach ($role_has_permissions as $key2 => $role_has_permission) {
+                    foreach (Request::get('roles') as $key => $data_role) {
+                        if ($data_role == $role_has_permission->role_id) {
+                            Access::create([
+                                'user_id' => $user->id,
+                                'role_id' => $role_has_permission->role_id,
+                                'permission_id' => $value['permission_id'],
+                                'module_id' => $value['module_id'],
+                                'can_create' => $chk_create,
+                                'can_update' => $chk_update,
+                                'can_delete' => $chk_delete,
+                            ]);            
+                        }
+                    }
+                }
+            }
+        }
+
         if (Request::get('is_send') == 1) {
+            // send mail
             event(new Registered($user));
         } else {
             $user->update(['email_verified_at' => Carbon::now()]);
@@ -163,6 +197,37 @@ class UserController extends Controller
             }
         }  
 
+        // set access
+        Access::where('user_id', '=', $user->id)->delete();
+        foreach (Request::get('temps') as $key => $value) {
+            $chk_create = 0;
+            $chk_update = 0;
+            $chk_delete = 0;
+
+            if (isset($value['can_create'])) { $chk_create = 1; } else { $chk_create = 0; }
+            if (isset($value['can_update'])) { $chk_update = 1; } else { $chk_update = 0; }
+            if (isset($value['can_delete'])) { $chk_delete = 1; } else { $chk_delete = 0; }
+
+            if ($chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
+                $role_has_permissions = Role_Has_Permission::where('permission_id', '=', $value['permission_id'])->get();
+                foreach ($role_has_permissions as $key2 => $role_has_permission) {
+                    foreach (Request::get('roles') as $key => $data_role) {
+                        if ($data_role == $role_has_permission->role_id) {
+                            Access::create([
+                                'user_id' => $user->id,
+                                'role_id' => $role_has_permission->role_id,
+                                'permission_id' => $value['permission_id'],
+                                'module_id' => $value['module_id'],
+                                'can_create' => $chk_create,
+                                'can_update' => $chk_update,
+                                'can_delete' => $chk_delete,
+                            ]);            
+                        }
+                    }
+                }
+            }
+        }
+
         if (Request::get('is_send') == 1) {
             event(new Registered($user));
         }
@@ -179,6 +244,7 @@ class UserController extends Controller
             return redirect()->back();
         }
 
+        Access::where('user_id', '=', $user->id)->delete();
         $user->delete();
 
         return redirect()->route('admin.users.index');
