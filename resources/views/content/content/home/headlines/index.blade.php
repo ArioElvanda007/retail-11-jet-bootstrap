@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -7,12 +8,14 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
-                <button type="button" onclick='create()' class="btn btn-dark">
-                    <i class="fa fa-plus"></i>
-                    <span class="ms-2">Create</span>
-                </button>
-            </div>
+            @if ($provider::access('headlines')->access[0]->can_create == 1)
+                <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
+                    <button type="button" onclick='create()' class="btn btn-dark">
+                        <i class="fa fa-plus"></i>
+                        <span class="ms-2">Create</span>
+                    </button>
+                </div>                             
+            @endif
             
             @if ($query->count() > 0)
                 @foreach ($query as $data)
@@ -44,14 +47,18 @@
                         </div>
                         <div class="card-footer">
                             <div class="text-right">
-                                <a href="{{ route('content.home.headlines.edit', $data->id) }}">
-                                    <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
-                                </a>
+                                @if ($provider::access('headlines')->access[0]->can_update == 1)
+                                    <a href="{{ route('content.home.headlines.edit', $data->id) }}">
+                                        <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
+                                    </a>
+                                @endif
 
-                                <a onclick="return confirm('Are you sure?')"
-                                    href="{{ route('content.home.headlines.destroy', $data->id) }}">
-                                    <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
-                                </a>
+                                @if ($provider::access('headlines')->access[0]->can_delete == 1)
+                                    <a onclick="return confirm('Are you sure?')"
+                                        href="{{ route('content.home.headlines.destroy', $data->id) }}">
+                                        <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>

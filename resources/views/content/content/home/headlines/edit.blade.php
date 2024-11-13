@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -19,15 +20,6 @@
                                 <div class="row">
                                     <div class="col-md-12 mt-3">
                                         <label class="form-label fs-5" for="image">Image</label>
-                                        {{-- <input type="file" id="image" class="form-control selectImage" name="image"
-                                            placeholder="Upload Image" />
-                                        @if ($query['image'] != null && file_exists(public_path('storage/' . config('app.dir_img_headline') . '/' . $query['image'])))
-                                            <img id="view" class="mt-2" style="height: 300px"
-                                                src={{ config('app.url') . '/storage/' . config('app.dir_img_headline') . '/' . $query['image'] }} />
-                                        @else
-                                            <img id="view" class="mt-2" style="height: 300px"
-                                                src="{{ URL::asset('/assets/image/Upload-pana.svg') }}" />
-                                        @endif --}}
 
                                         <div id="inputImg">
                                             <div class="input-group mb-3">
@@ -98,10 +90,13 @@
 
                     <div class="p-2 card-footer d-print-none">
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary me-2" type="submit">
-                                <i class="fa fa-save"></i>
-                                <span class="ms-2">Save</span>
-                            </button>
+                            @if ($provider::access('headlines')->access[0]->can_update == 1)
+                                <button class="btn btn-primary me-2" type="submit">
+                                    <i class="fa fa-save"></i>
+                                    <span class="ms-2">Save</span>
+                                </button>
+                            @endif
+                            
                             <button type="button" onclick='backToList()' class="btn btn-dark">
                                 <i class="fa fa-share"></i>
                                 <span class="ms-2">Cancel</span>

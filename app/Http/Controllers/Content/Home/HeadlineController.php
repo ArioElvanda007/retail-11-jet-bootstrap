@@ -11,11 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class HeadlineController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_view == 0 || app($this->can_access())->access('headlines')->access[0]->is_active == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "content.home.headlines.index", 'name' => "Headlines"]
         ];
@@ -29,6 +38,10 @@ class HeadlineController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "content.home.headlines.index", 'name' => "Headlines"], ['link' => "content.home.headlines.create", 'name' => "Create Headline"]
         ];
@@ -42,6 +55,10 @@ class HeadlineController extends Controller
      */
     public function store(HttpRequest $request)
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         // save image *********************************************************************
         $location = config('app.dir_img_headline');
         $files = $request->file('image');
@@ -78,6 +95,10 @@ class HeadlineController extends Controller
      */
     public function edit(Headline $headline)
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "content.home.headlines.index", 'name' => "Headlines"], ['link' => "content/home/headlines/edit/$headline->id", 'name' => "Edit Headline"]
         ];
@@ -101,6 +122,10 @@ class HeadlineController extends Controller
      */
     public function update(Headline $headline, HttpRequest $request)
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $location = config('app.dir_img_headline');
 
         // dd($headline->image);
@@ -146,6 +171,10 @@ class HeadlineController extends Controller
      */
     public function destroy(Headline $headline)
     {
+        if (app($this->can_access())->access('headlines')->access[0]->can_delete == 0) {
+            return abort(401);
+        }
+
         $location = config('app.dir_img_headline');
 
         // delete not null*********************************************************************
