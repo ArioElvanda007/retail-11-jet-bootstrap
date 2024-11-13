@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_view == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_view == 0) {
             return abort(401);
         }
 
@@ -44,7 +44,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_create == 0) {
             return abort(401);
         } 
 
@@ -61,7 +61,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {        
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_create == 0) {
             return abort(401);
         }
 
@@ -157,7 +157,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_update == 0) {
             return abort(401);
         } 
 
@@ -182,7 +182,7 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request)
     {
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_update == 0) {
             return abort(401);
         }
 
@@ -272,7 +272,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if (app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_delete == 0) {
+        if (app($this->can_access())->access('users')->access->count() == 0 || app($this->can_access())->access('users')->access[0]->modules->is_active == 0 || app($this->can_access())->access('users')->access[0]->can_delete == 0) {
             return abort(401);
         } 
 

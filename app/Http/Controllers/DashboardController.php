@@ -17,21 +17,26 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        if (app($this->can_access())->access('dashboard')->access[0]->modules->is_active == 0 || app($this->can_access())->access('dashboard')->access[0]->can_view == 0) {
-            return abort(401);
+    {     
+        if (app($this->can_access())->access('dashboard')->access->count() == 0 || app($this->can_access())->access('dashboard')->access[0]->modules->is_active == 0 || app($this->can_access())->access('dashboard')->access[0]->can_view == 0) {
+            $breadcrumbs = [
+                ['link' => "dashboard", 'name' => "Welcome"]
+            ];
+
+            return view('content.welcome', ['breadcrumbs' => $breadcrumbs]);     
         } 
+        else {
+            $breadcrumbs = [
+                ['link' => "dashboard", 'name' => "Dashboard"]
+            ];
 
-        $breadcrumbs = [
-            ['link' => "dashboard", 'name' => "Dashboard"]
-        ];
-        
-        $dateFrom = Carbon::now()->format('Y-m-d');
+            $dateFrom = Carbon::now()->format('Y-m-d');
 
-        $query = DB::select("CALL spReportDashboard('$dateFrom')");
-        $chartSPCMonthly = DB::select("CALL spChartSPCMonthly('$dateFrom')");
-
-        return view('content.dashboard', compact('query', 'chartSPCMonthly', 'dateFrom'), ['breadcrumbs' => $breadcrumbs]);        
+            $query = DB::select("CALL spReportDashboard('$dateFrom')");
+            $chartSPCMonthly = DB::select("CALL spChartSPCMonthly('$dateFrom')");
+    
+            return view('content.dashboard', compact('query', 'chartSPCMonthly', 'dateFrom'), ['breadcrumbs' => $breadcrumbs]);            
+        }
     }
 
     /**
