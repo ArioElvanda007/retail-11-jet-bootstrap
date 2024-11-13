@@ -8,11 +8,20 @@ use App\Models\Accounting\Bank;
 
 class BankController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.banks.index", 'name' => "Banks"]
         ];
@@ -26,6 +35,10 @@ class BankController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.banks.index", 'name' => "Banks"], ['link' => "accounting.banks.create", 'name' => "Create Bank"]
         ];
@@ -38,6 +51,10 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         Bank::create([
             'account_number' => Request::get('account_number'),
             'account_name' => Request::get('account_name'),
@@ -62,6 +79,10 @@ class BankController extends Controller
      */
     public function edit(Bank $bank)
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.banks.index", 'name' => "Banks"], ['link' => "accounting/banks/edit/$bank->id", 'name' => "Edit Bank"]
         ];
@@ -82,6 +103,10 @@ class BankController extends Controller
      */
     public function update(Bank $bank, Request $request)
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $bank->update([
             'account_number' => Request::get('account_number'),
             'account_name' => Request::get('account_name'),
@@ -98,6 +123,10 @@ class BankController extends Controller
      */
     public function destroy(Bank $bank)
     {
+        if (app($this->can_access())->access('banks')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $bank->delete();
 
         return redirect()->route('accounting.banks.index');  

@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -11,12 +12,14 @@
             <div class="card card-solid">
                 <div class="card-body">
 
-                    <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
-                        <button type="button" onclick='create()' class="btn btn-dark">
-                            <i class="fa fa-plus"></i>
-                            <span class="ms-2">Create</span>
-                        </button>
-                    </div>
+                    @if ($provider::access('accounts')->access[0]->can_create == 1)
+                        <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
+                            <button type="button" onclick='create()' class="btn btn-dark">
+                                <i class="fa fa-plus"></i>
+                                <span class="ms-2">Create</span>
+                            </button>
+                        </div>                            
+                    @endif
 
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
@@ -48,14 +51,18 @@
                                         {{ $data->updated_at }}
                                     </td>
                                     <td class="d-print-none">
-                                        <a href="{{ route('accounting.accounts.edit', $data->id) }}">
-                                            <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
-                                        </a>
+                                        @if ($provider::access('accounts')->access[0]->can_update == 1)
+                                            <a href="{{ route('accounting.accounts.edit', $data->id) }}">
+                                                <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
+                                            </a>
+                                        @endif
 
-                                        <a onclick="return confirm('Are you sure?')"
-                                            href="{{ route('accounting.accounts.destroy', $data->id) }}">
-                                            <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
-                                        </a>
+                                        @if ($provider::access('accounts')->access[0]->can_delete == 1)
+                                            <a onclick="return confirm('Are you sure?')"
+                                                href="{{ route('accounting.accounts.destroy', $data->id) }}">
+                                                <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

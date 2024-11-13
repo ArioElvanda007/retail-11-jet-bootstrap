@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])

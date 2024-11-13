@@ -155,6 +155,20 @@ class ModuleSeeder extends Seeder
         ]);
 
         DB::table('modules')->insert([
+            'name' => 'banks',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $module = DB::table('modules')->where('name', '=', 'banks')->first();
+        DB::table('permission_has_modules')->insert([
+            'permission_id' => $permission->id,
+            'module_id' => $module->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        DB::table('modules')->insert([
             'name' => 'cashflows',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

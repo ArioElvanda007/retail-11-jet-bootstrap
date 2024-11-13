@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.accounts.index", 'name' => "Accounts"]
         ];
@@ -27,6 +36,10 @@ class AccountController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.accounts.index", 'name' => "Accounts"], ['link' => "accounting.accounts.create", 'name' => "Create Account"]
         ];
@@ -40,6 +53,11 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
+
         $seq = 0;
         if (Request::get('seq') != null) {
             $seq = Request::get('seq');
@@ -71,6 +89,10 @@ class AccountController extends Controller
      */
     public function edit(Account $account)
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.accounts.index", 'name' => "Accounts"], ['link' => "accounting/accounts/edit/$account->id", 'name' => "Edit Account"]
         ];
@@ -95,6 +117,10 @@ class AccountController extends Controller
      */
     public function update(Account $account, Request $request)
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $seq = 0;
         if (Request::get('seq') != null) {
             $seq = Request::get('seq');
@@ -118,6 +144,10 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
+        if (app($this->can_access())->access('accounts')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $account->delete();
 
         return redirect()->route('accounting.accounts.index');  

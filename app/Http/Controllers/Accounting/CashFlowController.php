@@ -12,6 +12,11 @@ use App\Models\Accounting\Account;
 
 class CashFlowController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     private function GenerateCode($date = '')
     {
         if ($date == '') { $date = Carbon::now();
@@ -30,6 +35,10 @@ class CashFlowController extends Controller
      */
     public function index()
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "accounting.cashflows.index", 'name' => "Cashflows"]
@@ -52,6 +61,10 @@ class CashFlowController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "accounting.cashflows.index", 'name' => "Cashflows"],
@@ -72,6 +85,10 @@ class CashFlowController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
         $code = $this->GenerateCode($date_input);
 
@@ -106,6 +123,10 @@ class CashFlowController extends Controller
      */
     public function edit(CashFlow $cashflow)
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "accounting.cashflows.index", 'name' => "Cashflows"], ['link' => "accounting/cashflows/edit/$cashflow->id", 'name' => "Edit Cashflow"]
         ];
@@ -122,6 +143,10 @@ class CashFlowController extends Controller
      */
     public function update(CashFlow $cashflow, Request $request)
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
 
         $cashflow->update([
@@ -146,6 +171,10 @@ class CashFlowController extends Controller
      */
     public function destroy(CashFlow $cashflow)
     {
+        if (app($this->can_access())->access('cashflows')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $cashflow->delete();
         
         return redirect()->route('accounting.cashflows.index')->with('message', 'delete success');        

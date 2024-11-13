@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -86,10 +87,13 @@
 
                     <div class="p-2 card-footer d-print-none">
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary me-2" type="submit">
-                                <i class="fa fa-save"></i>
-                                <span class="ms-2">Save</span>
-                            </button>
+                            @if ($provider::access('cashflows')->access[0]->can_update == 1)
+                                <button class="btn btn-primary me-2" type="submit">
+                                    <i class="fa fa-save"></i>
+                                    <span class="ms-2">Save</span>
+                                </button>
+                            @endif
+
                             <button type="button" onclick='backToList()' class="btn btn-dark">
                                 <i class="fa fa-share"></i>
                                 <span class="ms-2">Cancel</span>
