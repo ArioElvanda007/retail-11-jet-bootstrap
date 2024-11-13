@@ -13,8 +13,8 @@
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Permission</th>
-                                <th>Modules</th>
+                                <th>Module</th>
+                                <th>Menu</th>
                                 <th>Updated</th>
                                 <th class="d-print-none">#</th>
                             </tr>

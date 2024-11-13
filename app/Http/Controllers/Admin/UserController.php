@@ -86,15 +86,17 @@ class UserController extends Controller
 
         // set access
         foreach (Request::get('temps') as $key => $value) {
+            $chk_view = 0;
             $chk_create = 0;
             $chk_update = 0;
             $chk_delete = 0;
 
+            if (isset($value['can_view'])) { $chk_view = 1; } else { $chk_view = 0; }
             if (isset($value['can_create'])) { $chk_create = 1; } else { $chk_create = 0; }
             if (isset($value['can_update'])) { $chk_update = 1; } else { $chk_update = 0; }
             if (isset($value['can_delete'])) { $chk_delete = 1; } else { $chk_delete = 0; }
 
-            if ($chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
+            if ($chk_view == 1 || $chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
                 $role_has_permissions = Role_Has_Permission::where('permission_id', '=', $value['permission_id'])->get();
                 foreach ($role_has_permissions as $key2 => $role_has_permission) {
                     foreach (Request::get('roles') as $key => $data_role) {
@@ -104,6 +106,7 @@ class UserController extends Controller
                                 'role_id' => $role_has_permission->role_id,
                                 'permission_id' => $value['permission_id'],
                                 'module_id' => $value['module_id'],
+                                'can_view' => $chk_view,
                                 'can_create' => $chk_create,
                                 'can_update' => $chk_update,
                                 'can_delete' => $chk_delete,
@@ -201,15 +204,17 @@ class UserController extends Controller
         // set access
         Access::where('user_id', '=', $user->id)->delete();
         foreach (Request::get('temps') as $key => $value) {
+            $chk_view = 0;
             $chk_create = 0;
             $chk_update = 0;
             $chk_delete = 0;
 
+            if (isset($value['can_view'])) { $chk_view = 1; } else { $chk_view = 0; }
             if (isset($value['can_create'])) { $chk_create = 1; } else { $chk_create = 0; }
             if (isset($value['can_update'])) { $chk_update = 1; } else { $chk_update = 0; }
             if (isset($value['can_delete'])) { $chk_delete = 1; } else { $chk_delete = 0; }
 
-            if ($chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
+            if ($chk_view == 1 || $chk_create == 1 || $chk_update == 1 || $chk_delete == 1) {
                 $role_has_permissions = Role_Has_Permission::where('permission_id', '=', $value['permission_id'])->get();
                 foreach ($role_has_permissions as $key2 => $role_has_permission) {
                     foreach (Request::get('roles') as $key => $data_role) {
@@ -219,6 +224,7 @@ class UserController extends Controller
                                 'role_id' => $role_has_permission->role_id,
                                 'permission_id' => $value['permission_id'],
                                 'module_id' => $value['module_id'],
+                                'can_view' => $chk_view,
                                 'can_create' => $chk_create,
                                 'can_update' => $chk_update,
                                 'can_delete' => $chk_delete,

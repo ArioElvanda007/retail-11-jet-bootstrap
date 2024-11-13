@@ -14,6 +14,7 @@ class Access extends Model
         'role_id',
         'permission_id',
         'module_id',
+        'can_view',
         'can_create',
         'can_update',
         'can_delete',
@@ -28,4 +29,9 @@ class Access extends Model
     {
         return \Carbon\Carbon::parse($this->attributes['updated_at'])->diffForHumans();
     }   
+
+    public function modules()
+    {
+        return $this->belongsTo('App\Models\Module', 'module_id');
+    }
 }

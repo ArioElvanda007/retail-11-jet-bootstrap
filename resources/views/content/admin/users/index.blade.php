@@ -62,11 +62,11 @@
                                             <span class="badge bg-success p-1"><i class="fa fa-envelope"></i> Resend</span>
                                         </a>    
 
-                                        @if ($data->name != 'admin' && $data->name != 'Admin')                                            
-                                            <a href="{{ route('admin.users.edit', $data->id) }}">
-                                                <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
-                                            </a>
+                                        <a href="{{ route('admin.users.edit', $data->id) }}">
+                                            <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
+                                        </a>
 
+                                        @if ($data->name != 'admin' && $data->name != 'Admin')                                            
                                             <a onclick="return confirm('Are you sure?')"
                                                 href="{{ route('admin.users.destroy', $data->id) }}">
                                                 <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>

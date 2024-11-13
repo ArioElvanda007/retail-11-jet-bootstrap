@@ -12,11 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('products')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.products.index", 'name' => "Products"]
         ];
@@ -31,6 +40,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('products')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.products.index", 'name' => "Products"], ['link' => "stock.products.create", 'name' => "Create Product"]
         ];
@@ -43,6 +56,10 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('products')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $product = Product::create([
             'code' => Request::get('code'),
             'name' => Request::get('name'),
@@ -76,6 +93,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if (app($this->can_access())->access('products')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.products.index", 'name' => "Products"], ['link' => "stock/products/edit/$product->id", 'name' => "Edit Product"]
         ];
@@ -100,6 +121,10 @@ class ProductController extends Controller
      */
     public function update(Product $product, Request $request)
     {
+        if (app($this->can_access())->access('products')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $product->update([
             'code' => Request::get('code'),
             'name' => Request::get('name'),
@@ -132,6 +157,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (app($this->can_access())->access('products')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $product->delete();
 
         return redirect()->route('stock.products.index');        

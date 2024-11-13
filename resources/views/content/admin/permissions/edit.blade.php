@@ -17,14 +17,14 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <div class="mb-3">
-                                        <label class="form-label" for="name">Permission</label>
+                                        <label class="form-label" for="name">Module</label>
                                         <input type="text" class="form-control" id="name" name="name"
                                             placeholder="Role name" value="{{ $query['name'] }}" required disabled />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <span class="mb-3">Modules : </span>
+                                <span class="mb-3">Menu : </span>
                                 @if (count($modules) == 0)
                                     <div class="text-secondary mt-2">Not have modules available,..</div>
                                 @else

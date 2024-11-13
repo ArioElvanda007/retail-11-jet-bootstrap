@@ -86,5 +86,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getUpdatedAtAttribute()
     {
         return \Carbon\Carbon::parse($this->attributes['updated_at'])->diffForHumans();
-    }    
+    }   
+    
+    public function access()
+    {
+        return $this->hasMany('App\Models\Access', 'user_id', 'id');
+    }
 }

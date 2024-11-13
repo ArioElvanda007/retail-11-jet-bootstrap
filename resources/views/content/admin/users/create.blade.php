@@ -71,15 +71,19 @@
                                                 <th scope="col" class="text-center align-middle" rowspan="2" hidden>
                                                     module_id</th>
                                                 <th scope="col" class="text-center align-middle" rowspan="2">
-                                                    Permission</th>
-                                                <th scope="col" class="text-center align-middle" rowspan="2">Module
+                                                    Module</th>
+                                                <th scope="col" class="text-center align-middle" rowspan="2">Menu
                                                 </th>
+                                                <th scope="col" class="text-center align-middle">View</th>
                                                 <th scope="col" class="text-center align-middle">Create</th>
                                                 <th scope="col" class="text-center align-middle">Update</th>
                                                 <th scope="col" class="text-center align-middle">Delete</th>
                                             </tr>
 
                                             <tr>
+                                                <th scope="col" class="align-middle text-center">
+                                                    <input type="checkbox" id="is_view" name="is_view" onclick='select_is_view()' />
+                                                </th>
                                                 <th scope="col" class="align-middle text-center">
                                                     <input type="checkbox" id="is_create" name="is_create" onclick='select_is_create()' />
                                                 </th>
@@ -93,7 +97,7 @@
                                         </thead>
                                         <tbody id="use-tbody">
                                             <tr class="rowCount" id="rowCount_1">
-                                                <td colspan="7" class="text-center">
+                                                <td colspan="8" class="text-center">
                                                     <span class="text-secondary">Please selected roles</span>
                                                 </td>
                                             </tr>
@@ -132,6 +136,16 @@
 
 @section('page-script')
     <script>
+        function select_is_view(){
+            var value = document.getElementById('is_view').checked;
+            var chk = document.getElementsByClassName('is_view');  
+            for(var i = 0; i < chk.length; i++){                  
+                if (document.getElementById("temps[" + i + "][access_lock]").value == "0") {
+                    chk[i].checked = value;  
+                }
+            }  
+        }
+
         function select_is_create(){
             var value = document.getElementById('is_create').checked;
             var chk = document.getElementsByClassName('is_create');  
@@ -192,7 +206,7 @@
             } else if (shaveCheck == false) {
                 $("#use-tbody").append(
                     '<tr class="rowCount" id="rowCount_1">' +
-                    '<td colspan="7" class="text-center">' +
+                    '<td colspan="8" class="text-center">' +
                     '<span class="text-secondary">Please selected roles</span>' +
                     '</td>' +
                     '</tr>'
@@ -227,6 +241,24 @@
                             html += '<td hidden><input type="text" class="form-control" id="temps[' + index + '][module_id]" name="temps[' + index + '][module_id]" value="' + res[index]['module_id'] + '" /></td>';
                             html += '<td id="temps[' + index + '][permission_name]" name="temps[' + index + '][permission_name]">' + res[index]['permission_name'] + '</td>';
                             html += '<td id="temps[' + index + '][module_name]" name="temps[' + index + '][module_name]">' + res[index]['module_name'] + '</td>';
+
+                            if (res[index]['can_view'] == 1) {
+                                if ((res[index]['access_lock'] == 0)) {
+                                    html +=
+                                        '<td class="align-middle text-center"><input class="is_view" type="checkbox" id="temps[' + index + '][can_view]" name="temps[' + index + '][can_view]" value="1" checked /></td>';
+                                } else {
+                                    html +=
+                                        '<td class="align-middle text-center"><input class="is_view" type="checkbox" id="temps[' + index + '][can_view]" name="temps[' + index + '][can_view]" value="1" checked disabled /></td>';
+                                }
+                            } else {
+                                if ((res[index]['access_lock'] == 0)) {
+                                    html +=
+                                        '<td class="align-middle text-center"><input class="is_view" type="checkbox" id="temps[' + index + '][can_view]" name="temps[' + index + '][can_view]" value="1" /></td>';
+                                } else {
+                                    html +=
+                                        '<td class="align-middle text-center"><input class="is_view" type="checkbox" id="temps[' + index + '][can_view]" name="temps[' + index + '][can_view]" value="1" disabled /></td>';
+                                }
+                            }
 
                             if (res[index]['can_create'] == 1) {
                                 if ((res[index]['access_lock'] == 0)) {
@@ -322,7 +354,7 @@
                     } else {
                         $("#use-tbody").append(
                             '<tr class="rowCount" id="rowCount_1">' +
-                            '<td colspan="7" class="text-center">' +
+                            '<td colspan="8" class="text-center">' +
                             '<span class="text-secondary">Data roles not found</span>' +
                             '</td>' +
                             '</tr>'

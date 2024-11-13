@@ -47,7 +47,6 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\BusinessController;
-use App\Models\Module;
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware(['can:manage dashboard']);

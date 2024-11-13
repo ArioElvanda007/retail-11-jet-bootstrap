@@ -19,8 +19,8 @@ return new class extends Migration
             THEN
                 SELECT 
                     E.id AS permission_id, E.name AS permission_name, G.id AS module_id, IFNULL(G.name, '') AS module_name, 
-                    CASE WHEN E.name = 'manage report' OR E.name = 'manage dashboard' OR G.id IS NULL THEN 1 ELSE 0 END access_lock,
-                    0 AS can_create, 0 AS can_update, 0 AS can_delete
+                    CASE WHEN G.id IS NULL THEN 1 ELSE 0 END access_lock,
+                    1 AS can_view, 0 AS can_create, 0 AS can_update, 0 AS can_delete
                 FROM 
                     roles AS C
                 LEFT OUTER JOIN
@@ -46,7 +46,7 @@ return new class extends Migration
                 DROP TEMPORARY TABLE IF EXISTS tempUsers;
                 CREATE TEMPORARY TABLE tempUsers
                 SELECT 
-                    A.id, B.role_id, B.permission_id, B.module_id, B.can_create, B.can_update, B.can_delete, C.name
+                    A.id, B.role_id, B.permission_id, B.module_id, B.can_view, B.can_create, B.can_update, B.can_delete, C.name
                 FROM 
                     users AS A
                 LEFT OUTER JOIN
@@ -61,7 +61,8 @@ return new class extends Migration
 
                 SELECT 
                     E.id AS permission_id, E.name AS permission_name, G.id AS module_id, IFNULL(G.name, '') AS module_name, 
-                    CASE WHEN E.name = 'manage report' OR E.name = 'manage dashboard' OR G.id IS NULL THEN 1 ELSE 0 END access_lock,      
+                    CASE WHEN G.id IS NULL THEN 1 ELSE 0 END access_lock,      
+                    CASE WHEN H.can_view IS NULL THEN 0 ELSE H.can_view END can_view,
                     CASE WHEN H.can_create IS NULL THEN 0 ELSE H.can_create END can_create,
                     CASE WHEN H.can_update IS NULL THEN 0 ELSE H.can_update END can_update,
                     CASE WHEN H.can_delete IS NULL THEN 0 ELSE H.can_delete END can_delete
