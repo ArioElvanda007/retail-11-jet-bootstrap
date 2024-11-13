@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SellingController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     private function GenerateCode($date = '')
     {
         if ($date == '') { $date = Carbon::now();
@@ -31,6 +36,10 @@ class SellingController extends Controller
      */
     public function index()
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "selling.selling.index", 'name' => "Selling"]
@@ -53,6 +62,10 @@ class SellingController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "selling.selling.index", 'name' => "Selling"],
@@ -75,6 +88,10 @@ class SellingController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
         $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
 
@@ -138,6 +155,10 @@ class SellingController extends Controller
      */
     public function edit(Selling $selling)
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "selling.selling.index", 'name' => "Selling"], ['link' => "selling/selling/edit/$selling->id", 'name' => "Edit Selling"]
         ];
@@ -158,6 +179,10 @@ class SellingController extends Controller
      */
     public function update(Selling $selling, Request $request)
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
         $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
 
@@ -211,6 +236,10 @@ class SellingController extends Controller
      */
     public function destroy(Selling $selling)
     {
+        if (app($this->can_access())->access('selling')->access[0]->modules->is_active == 0 || app($this->can_access())->access('selling')->access[0]->can_delete == 0) {
+            return abort(401);
+        }
+
         $selling->delete();
         SellingDetail::where('selling_id', '=', $selling->id)->delete();
         

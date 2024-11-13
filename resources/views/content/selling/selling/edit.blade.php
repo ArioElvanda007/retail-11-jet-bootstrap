@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -18,10 +19,12 @@
                                 <i class="fa fa-print"></i>
                             </button>
 
-                            <button type="button" onclick='deleteData({{ $query->id }})' class="btn btn-danger mr-2">
-                                <i class="fa fa-trash"></i>
-                                <span class="ms-2">Delete</span>
-                            </button>
+                            @if ($provider::access('selling')->access[0]->can_delete == 1)
+                                <button type="button" onclick='deleteData({{ $query->id }})' class="btn btn-danger mr-2">
+                                    <i class="fa fa-trash"></i>
+                                    <span class="ms-2">Delete</span>
+                                </button>
+                            @endif
 
                             <button type="button" onclick='backToList()' class="btn btn-dark">
                                 <i class="fa fa-share"></i>
@@ -373,10 +376,13 @@
                                                 <label for="is_print" class="form-check-label">Print</label>
                                             </div>
 
-                                            <button class="btn btn-primary me-2" type="submit">
-                                                <i class="fa fa-save"></i>
-                                                <span class="ms-2">Save</span>
-                                            </button>
+                                            @if ($provider::access('selling')->access[0]->can_update == 1)
+                                                <button class="btn btn-primary me-2" type="submit">
+                                                    <i class="fa fa-save"></i>
+                                                    <span class="ms-2">Save</span>
+                                                </button>
+                                            @endif
+                                            
                                             <button type="button" onclick='cancelTrans({{ $query->id }})'
                                                 class="btn btn-dark">
                                                 <i class="fa fa-refresh"></i>

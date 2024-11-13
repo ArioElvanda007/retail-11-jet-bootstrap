@@ -19,10 +19,12 @@
                                 <i class="fa fa-print"></i>
                             </button>
 
-                            <button type="button" onclick='deleteData({{ $query->id }})' class="btn btn-danger mr-2">
-                                <i class="fa fa-trash"></i>
-                                <span class="ms-2">Delete</span>
-                            </button>
+                            @if ($provider::access('buying')->access[0]->can_delete == 1)
+                                <button type="button" onclick='deleteData({{ $query->id }})' class="btn btn-danger mr-2">
+                                    <i class="fa fa-trash"></i>
+                                    <span class="ms-2">Delete</span>
+                                </button>
+                            @endif
 
                             <button type="button" onclick='backToList()' class="btn btn-dark">
                                 <i class="fa fa-share"></i>
