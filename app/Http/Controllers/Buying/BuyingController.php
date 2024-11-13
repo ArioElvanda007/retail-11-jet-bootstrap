@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 class BuyingController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     private function GenerateCode($date = '')
     {
         if ($date == '') { $date = Carbon::now();
@@ -32,6 +37,10 @@ class BuyingController extends Controller
      */
     public function index()
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "buying.buying.index", 'name' => "Buying"]
@@ -54,6 +63,10 @@ class BuyingController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "buying.buying.index", 'name' => "Buying"],
@@ -76,6 +89,10 @@ class BuyingController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
         $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
 
@@ -136,6 +153,10 @@ class BuyingController extends Controller
      */
     public function edit(Buying $buying)
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "buying.buying.index", 'name' => "Buying"], ['link' => "buying/buying/edit/$buying->id", 'name' => "Edit Buying"]
         ];
@@ -156,6 +177,10 @@ class BuyingController extends Controller
      */
     public function update(Buying $buying, Request $request)
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $date_input = date('Y-m-d', strtotime(Request::get('date_input')));
         $due_date = date('Y-m-d', strtotime(Request::get('due_date')));
 
@@ -206,6 +231,10 @@ class BuyingController extends Controller
      */
     public function destroy(Buying $buying)
     {
+        if (app($this->can_access())->access('buying')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $buying->delete();
         BuyingDetail::where('buying_id', '=', $buying->id)->delete();
         

@@ -8,11 +8,20 @@ use App\Models\Buying\Supplier;
 
 class SupplierController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "buying.suppliers.index", 'name' => "Suppliers"]
         ];
@@ -26,6 +35,10 @@ class SupplierController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "buying.suppliers.index", 'name' => "Suppliers"], ['link' => "buying.suppliers.create", 'name' => "Create Supplier"]
         ];
@@ -38,6 +51,10 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         Supplier::create([
             'name' => Request::get('name'),
             'address' => Request::get('address'),
@@ -62,6 +79,10 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "buying.suppliers.index", 'name' => "Suppliers"], ['link' => "buying/suppliers/edit/$supplier->id", 'name' => "Edit Supplier"]
         ];
@@ -83,6 +104,10 @@ class SupplierController extends Controller
      */
     public function update(Supplier $supplier, Request $request)
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $supplier->update([
             'name' => Request::get('name'),
             'address' => Request::get('address'),
@@ -99,6 +124,10 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        if (app($this->can_access())->access('suppliers')->access[0]->can_delete == 0) {
+            return abort(401);
+        }
+
         if ($supplier->id == 1) {
             return redirect()->back();
         }

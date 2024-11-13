@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -42,10 +43,12 @@
                                     <i class="fa fa-search"></i>
                                 </button>
 
-                                <button type="button" onclick='create()' class="ml-2 btn btn-dark">
-                                    <i class="fa fa-plus"></i>
-                                    <span class="ms-2">Create</span>
-                                </button>
+                                @if ($provider::access('buying')->access[0]->can_create == 1)
+                                    <button type="button" onclick='create()' class="ml-2 btn btn-dark">
+                                        <i class="fa fa-plus"></i>
+                                        <span class="ms-2">Create</span>
+                                    </button>                            
+                                @endif
                             </div>
                         </div>
                     </form>
@@ -92,14 +95,18 @@
                                         {{ $data->updated_at }}
                                     </td>
                                     <td class="d-print-none">
-                                        <a href="{{ route('buying.buying.edit', $data->id) }}">
-                                            <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
-                                        </a>
+                                        @if ($provider::access('buying')->access[0]->can_update == 1)
+                                            <a href="{{ route('buying.buying.edit', $data->id) }}">
+                                                <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
+                                            </a>
+                                        @endif
 
-                                        <a onclick="return confirm('Are you sure?')"
-                                            href="{{ route('buying.buying.destroy', $data->id) }}">
-                                            <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
-                                        </a>
+                                        @if ($provider::access('buying')->access[0]->can_delete == 1)
+                                            <a onclick="return confirm('Are you sure?')"
+                                                href="{{ route('buying.buying.destroy', $data->id) }}">
+                                                <span class="badge bg-danger p-1"><i class="fa fa-trash"></i> Delete</span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
