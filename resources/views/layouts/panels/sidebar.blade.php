@@ -154,7 +154,7 @@
 
                         @can('manage stock')
                             @foreach ($provider::access()->access as $data)
-                                @if ($data->modules->name == 'stocks' && $data->modules->is_active == 1 && $data->can_view == 1)
+                                @if ($data->modules->name == 'adjustment' && $data->modules->is_active == 1 && $data->can_view == 1)
                                     <li class="nav-item">
                                         <a href="{{ route('stock.stocks.index') }}"
                                             class="nav-link {{ request()->routeIs('stock.stocks.*') ? 'active' : '' }}">

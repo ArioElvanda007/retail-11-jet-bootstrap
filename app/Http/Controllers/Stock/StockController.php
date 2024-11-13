@@ -12,11 +12,20 @@ use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "stock.stocks.index", 'name' => "Adjustments"]
@@ -55,6 +64,10 @@ class StockController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"],
             ['link' => "stock.stocks.index", 'name' => "Adjustments"],
@@ -72,6 +85,10 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
                 $prod_id = $value['id'];
@@ -107,6 +124,10 @@ class StockController extends Controller
      */
     public function edit(Stock $stock)
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "stock.stocks.index", 'name' => "Adjustments"], ['link' => "stock/stocks/edit/$stock->id", 'name' => "Edit Adjustment"]
         ];
@@ -122,6 +143,10 @@ class StockController extends Controller
      */
     public function update(Request $request)
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         foreach (Request::get('temps') as $key => $value) {
             if ($value['id'] != null) {
                 if ($value['stock_id'] != null) {
@@ -153,6 +178,10 @@ class StockController extends Controller
      */
     public function destroy(Stock $stock)
     {
+        if (app($this->can_access())->access('adjustment')->access[0]->modules->is_active == 0 || app($this->can_access())->access('adjustment')->access[0]->can_delete == 0) {
+            return abort(401);
+        }
+
         $stock->delete();
         
         return redirect()->route('stock.stocks.index')->with('message', 'delete success');        
