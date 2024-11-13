@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -38,9 +39,11 @@
                                         {{ $data->updated_at }}
                                     </td>
                                     <td class="d-print-none">
-                                        <a href="{{ route('admin.permissions.edit', $data->id) }}">
-                                            <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
-                                        </a>
+                                        @if ($provider::access('permissions')->access[0]->can_update == 1)
+                                            <a href="{{ route('admin.permissions.edit', $data->id) }}">
+                                                <span class="badge bg-warning p-1"><i class="fa fa-edit"></i> Edit</span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

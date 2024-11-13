@@ -11,11 +11,20 @@ use App\Models\Role_Has_Permission;
 
 class RoleController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_view == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.roles.index", 'name' => "Roles"]
         ];
@@ -29,6 +38,10 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.roles.index", 'name' => "Roles"], ['link' => "admin.roles.create", 'name' => "Create Role"]
         ];
@@ -42,6 +55,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         $role = Role::create([
             'name' => Request::get('name'),
             'guard_name' => 'web',
@@ -72,6 +89,10 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.roles.index", 'name' => "Roles"], ['link' => "admin/users/roles/$role->id", 'name' => "Edit"]
         ];
@@ -90,6 +111,10 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $role->update(Request::only('name'));
 
         if (Request::get('permissions')) {
@@ -113,6 +138,10 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        if (app($this->can_access())->access('roles')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         if ($role->name == 'admin' || $role->name == 'user') {
             return redirect()->back();
         }

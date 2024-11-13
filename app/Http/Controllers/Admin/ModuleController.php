@@ -8,11 +8,20 @@ use App\Models\Module;
 
 class ModuleController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Menus"]
         ];
@@ -26,6 +35,10 @@ class ModuleController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Menus"], ['link' => "admin.modules.create", 'name' => "Create Menu"]
         ];
@@ -38,6 +51,10 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         Module::create([
             'name' => Request::get('name'),
             'description' => Request::get('description'),
@@ -60,6 +77,10 @@ class ModuleController extends Controller
      */
     public function edit(Module $module)
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.modules.index", 'name' => "Menus"], ['link' => "admin/modules/edit/$module->id", 'name' => "Edit Menu"]
         ];
@@ -78,6 +99,10 @@ class ModuleController extends Controller
      */
     public function update(Module $module, Request $request)
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $module->update([
             'name' => Request::get('name'),
             'description' => Request::get('description'),
@@ -92,6 +117,10 @@ class ModuleController extends Controller
      */
     public function destroy(Module $module)
     {
+        if (app($this->can_access())->access('modules')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         $module->delete();
 
         return redirect()->route('admin.modules.index');  

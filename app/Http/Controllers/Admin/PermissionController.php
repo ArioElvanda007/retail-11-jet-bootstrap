@@ -11,11 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class PermissionController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('permissions')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.permissions.index", 'name' => "Permissions"]
         ];
@@ -29,7 +38,9 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        if (app($this->can_access())->access('permissions')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
     }
 
     /**
@@ -37,7 +48,9 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (app($this->can_access())->access('permissions')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
     }
 
     /**
@@ -53,6 +66,10 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
+        if (app($this->can_access())->access('permissions')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.permissions.index", 'name' => "Permissions"], ['link' => "admin/permissions/edit/$permission->id", 'name' => "Edit Permission"]
         ];
@@ -91,6 +108,10 @@ class PermissionController extends Controller
      */
     public function update(Permission $permission, Request $request)
     {
+        if (app($this->can_access())->access('permissions')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         Permission_Has_Module::where('permission_id', '=', $permission->id)->delete();
         if (Request::get('modules')) {
             foreach (Request::get('modules') as $key => $value) {
@@ -109,6 +130,8 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (app($this->can_access())->access('permissions')->access[0]->can_delete == 0) {
+            return abort(401);
+        }
     }
 }

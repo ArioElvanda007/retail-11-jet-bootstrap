@@ -17,11 +17,20 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('users')->access[0]->can_view == 0) {
+            return abort(401);
+        }
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.users.index", 'name' => "Users"]
         ];
@@ -35,6 +44,10 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('users')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.users.index", 'name' => "Users"], ['link' => "admin.users.create", 'name' => "Create User"]
         ];
@@ -48,6 +61,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {        
+        if (app($this->can_access())->access('users')->access[0]->can_create == 0) {
+            return abort(401);
+        }
+
         $validator = Validator::make(Request::all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -140,6 +157,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if (app($this->can_access())->access('users')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.users.index", 'name' => "Users"], ['link' => "admin/users/edit/$user->id", 'name' => "Edit"]
         ];
@@ -161,6 +182,10 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request)
     {
+        if (app($this->can_access())->access('users')->access[0]->can_update == 0) {
+            return abort(401);
+        }
+
         $validator = Validator::make(Request::all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'max:255'],
@@ -247,6 +272,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if (app($this->can_access())->access('users')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
+
         if ($user->name == 'Admin' || $user->name == 'admin') {
             return redirect()->back();
         }

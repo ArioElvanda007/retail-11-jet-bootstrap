@@ -8,11 +8,20 @@ use App\Models\Business;
 
 class BusinessController extends Controller
 {
+    private function can_access()
+    {
+        return "App\Http\Controllers\Function\GlobalController";
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (app($this->can_access())->access('business')->access[0]->can_view == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.business.index", 'name' => "Business"]
         ];
@@ -26,6 +35,10 @@ class BusinessController extends Controller
      */
     public function create()
     {
+        if (app($this->can_access())->access('business')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.business.index", 'name' => "Business"], ['link' => "admin.business.create", 'name' => "Create Business"]
         ];
@@ -38,6 +51,10 @@ class BusinessController extends Controller
      */
     public function store(Request $request)
     {
+        if (app($this->can_access())->access('business')->access[0]->can_create == 0) {
+            return abort(401);
+        } 
+
         Business::create([
             'name' => Request::get('name'),
             'address' => Request::get('address'),
@@ -62,6 +79,10 @@ class BusinessController extends Controller
      */
     public function edit(Business $business)
     {
+        if (app($this->can_access())->access('business')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $breadcrumbs = [
             ['link' => "dashboard", 'name' => "Dashboard"], ['link' => "admin.business.index", 'name' => "Business"], ['link' => "admin/business/edit/$business->id", 'name' => "Edit Business"]
         ];
@@ -83,6 +104,10 @@ class BusinessController extends Controller
      */
     public function update(Business $business, Request $request)
     {
+        if (app($this->can_access())->access('business')->access[0]->can_update == 0) {
+            return abort(401);
+        } 
+
         $business->update([
             'name' => Request::get('name'),
             'address' => Request::get('address'),
@@ -99,6 +124,8 @@ class BusinessController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (app($this->can_access())->access('business')->access[0]->can_delete == 0) {
+            return abort(401);
+        } 
     }
 }

@@ -1,5 +1,6 @@
 @extends('layouts/app')
 @section('title', $breadcrumbs[count($breadcrumbs) - 1]['name'])
+@inject('provider', 'App\Http\Controllers\Function\GlobalController')
 
 @section('content')
     @include('layouts/panels/breadcrumb', ['breadcrumbs' => $breadcrumbs])
@@ -13,9 +14,6 @@
 
                     @if ($query)
                         <div class="card bg-light">
-                            {{-- <div class="card-header text-muted border-bottom-0">
-                            {{ $query['name'] }}
-                        </div> --}}
                             <div class="card-body pt-3">
                                 <div class="row">
                                     <div class="col-7">
@@ -37,13 +35,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <div class="text-right">
-                                    <a href="{{ route('admin.business.edit', $query->id) }}" class="btn btn-sm btn-dark">
-                                        <i class="fas fa-pencil mr-2"></i> Update
-                                    </a>
+                            @if ($provider::access('business')->access[0]->can_update == 1)
+                                <div class="card-footer">
+                                    <div class="text-right">
+                                        <a href="{{ route('admin.business.edit', $query->id) }}" class="btn btn-sm btn-dark">
+                                            <i class="fas fa-pencil mr-2"></i> Update
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     @else
                         <div class="text-center">
@@ -52,8 +52,12 @@
                             <p class="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn’t find the page you’re
                                 looking for.</p>
                             <div class="mt-10 flex items-center justify-center gap-x-6">
-                                <a href="{{ route('admin.business.create') }}"
-                                    class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create New</a>
+                                @if ($provider::access('business')->access[0]->can_create == 1)
+                                    <a href="{{ route('admin.business.create') }}"
+                                    class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        Create New
+                                    </a>                          
+                                @endif
                             </div>
                         </div>
                     @endif
