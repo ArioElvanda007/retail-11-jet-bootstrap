@@ -15,7 +15,7 @@ class ReportCashflowController extends Controller
 
     public function index()
     {
-        if (app($this->can_access())->access('report cashflows')->access[0]->modules->is_active == 0 || app($this->can_access())->access('report cashflows')->access[0]->can_view == 0) {
+        if (app($this->can_access())->access('report cashflows')->access->count() == 0 || app($this->can_access())->access('report cashflows')->access[0]->modules->is_active == 0 || app($this->can_access())->access('report cashflows')->access[0]->can_view == 0) {
             return abort(401);
         } 
 

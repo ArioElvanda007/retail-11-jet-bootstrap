@@ -37,7 +37,7 @@ class BuyingController extends Controller
      */
     public function index()
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_view == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_view == 0) {
             return abort(401);
         } 
 
@@ -63,7 +63,7 @@ class BuyingController extends Controller
      */
     public function create()
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_create == 0) {
             return abort(401);
         } 
 
@@ -89,7 +89,7 @@ class BuyingController extends Controller
      */
     public function store(Request $request)
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_create == 0) {
             return abort(401);
         } 
 
@@ -153,7 +153,7 @@ class BuyingController extends Controller
      */
     public function edit(Buying $buying)
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_update == 0) {
             return abort(401);
         }
 
@@ -177,7 +177,7 @@ class BuyingController extends Controller
      */
     public function update(Buying $buying, Request $request)
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_update == 0) {
             return abort(401);
         }
 
@@ -231,7 +231,7 @@ class BuyingController extends Controller
      */
     public function destroy(Buying $buying)
     {
-        if (app($this->can_access())->access('buying')->access[0]->can_delete == 0) {
+        if (app($this->can_access())->access('buying')->access->count() == 0 || app($this->can_access())->access('buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('buying')->access[0]->can_delete == 0) {
             return abort(401);
         } 
 

@@ -18,7 +18,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_view == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_view == 0) {
             return abort(401);
         } 
 
@@ -35,7 +35,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_create == 0) {
             return abort(401);
         } 
 
@@ -51,7 +51,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_create == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_create == 0) {
             return abort(401);
         } 
 
@@ -79,7 +79,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
             return abort(401);
         } 
 
@@ -104,7 +104,7 @@ class CustomerController extends Controller
      */
     public function update(Customer $customer, Request $request)
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
             return abort(401);
         } 
 
@@ -124,7 +124,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        if (app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
+        if (app($this->can_access())->access('customers')->access->count() == 0 || app($this->can_access())->access('customers')->access[0]->modules->is_active == 0 || app($this->can_access())->access('customers')->access[0]->can_update == 0) {
             return abort(401);
         } 
 

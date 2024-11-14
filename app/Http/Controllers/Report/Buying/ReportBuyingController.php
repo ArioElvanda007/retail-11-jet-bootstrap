@@ -15,7 +15,7 @@ class ReportBuyingController extends Controller
 
     public function index()
     {
-        if (app($this->can_access())->access('report buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('report buying')->access[0]->can_view == 0) {
+        if (app($this->can_access())->access('report buying')->access->count() == 0 || app($this->can_access())->access('report buying')->access[0]->modules->is_active == 0 || app($this->can_access())->access('report buying')->access[0]->can_view == 0) {
             return abort(401);
         }
 
