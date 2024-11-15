@@ -397,7 +397,7 @@
             document.getElementById('use-tThead').innerHTML = "";
 
             var html = 
-                '<tr>' +
+                '<tr class="text-center" style="background-color: #f0f0f0">' +
                     '<th>Date</th>' +
                     '<th class="w-full">Description</th>' +
                     '<th>Debet</th>' +

@@ -36,33 +36,43 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-6 mb-2 d-flex align-items-end">
+                        <div class="col-md-3 col-6 mb-2">
                             <div class="col">
                                 <label class="form-label fs-5" for="opt">View</label>
-                                <select class="form-control optSelect2"
+                                <select class="form-control"
                                     name="opt" id="opt" required>
                                     <option value="1" selected>Ledger</option>
                                     <option value="2">Modal vs Kewajiban</option>
                                     <option value="3">Cuan</option>
                                 </select>    
+                            </div>                            
+                        </div>                        
+
+                        <div class="col-md-3 col-6 mb-2 d-flex align-items-end">
+                            <div class="col">
+                                <label class="form-label fs-5" for="type">Type</label>
+                                <select class="form-control"
+                                    name="type" id="type" required>
+                                    <option value="1" selected>Sum</option>
+                                    <option value="2">Daily</option>
+                                    <option value="3">Monthly</option>
+                                </select>    
                             </div>
                             
                             <button type="button" id="btnSearch" name="btnSearch" class="btn btn-primary show"
-                                onclick='show()'>
+                                onclick='showData()'>
                                 <i class="fa fa-search"></i>
                             </button>
-                        </div>
-
-                        <div class="col-md-3 col-6 mb-2"></div>                        
+                        </div>                        
                     </div>
 
 
 
 
-                    <div class="row mt-2" id="dataView" hidden>
+                    <div class="row mt-3" id="dataView" hidden>
                         <h4 class="ml-2">Details</h4>
                         <div class="col-12">
-                            <table class="table table-bordered table-sm table-responsive text-nowrap">
+                            <table id="tblReport" name="tblReport" class="table table-bordered table-sm table-responsive text-nowrap">
                                 <thead id="use-tThead" class="text-sm font-monospace">
                                 </thead>
                                 <tbody id="use-tBody">
@@ -122,11 +132,31 @@
             }            
         }
 
-        function createHeader() {
+        function showData() {
+            if (document.getElementById('type').value == 1) {
+                showSum();
+            }
+            else if (document.getElementById('type').value == 2) {
+                showDaily();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        function createHeaderSum() {
             document.getElementById('use-tThead').innerHTML = "";
 
             var html = 
-                '<tr>' +
+                '<tr class="text-center" style="background-color: #f0f0f0">' +
                     '<th>Account</th>' +
                     '<th class="w-full">Description</th>' +
                     '<th>Debet</th>' +
@@ -137,10 +167,10 @@
             $('#use-tThead').append(html);
         }
 
-        function show() {
+        function showSum() {
             document.getElementById('dataView').hidden = true;
 
-            createHeader();
+            createHeaderSum();
             document.getElementById('use-tBody').innerHTML = "";
 
             var $iSumBeginning = 0;
@@ -211,7 +241,170 @@
                 }
             });
         }
+
+
+
+
+
+
+
+
+
+
+
+        function createHeaderDaily() {
+            document.getElementById('use-tThead').innerHTML = "";
+
+            var html = 
+                '<tr class="text-center" style="background-color: #f0f0f0">' +
+                    '<th>Account</th>' +
+                    '<th class="w-full">Description</th>' +
+                    '<th style="background-color: #fff8c5">Total</th>'
+            ;
+
+            for (let index = 0; index < 31; index++) {   
+                var dt = new Date(document.getElementById('date_from').value);
+                dt.setDate(dt.getDate() + index);
+
+                if (isWeekEnd(dt) == 'Saturday') {
+                    html += '<th class="text-center" style="background-color: #b9dcfd">' + formatDate(new Date(dt), [{month: 'numeric'}, {day: 'numeric'}], '-') + '</th>';                                               
+                }
+                else if (isWeekEnd(dt) == 'Sunday') {
+                    html += '<th class="text-center" style="background-color: #fec8c8">' + formatDate(new Date(dt), [{month: 'numeric'}, {day: 'numeric'}], '-') + '</th>';                                                                       
+                }
+                else {
+                    html += '<th class="text-center" style="background-color: #f0f0f0">' + formatDate(new Date(dt), [{month: 'numeric'}, {day: 'numeric'}], '-') + '</th>';                                               
+                }
                 
+            }
+
+            html += '</tr>';
+
+            $('#use-tThead').append(html);
+        }
+
+        function showDaily() {
+            document.getElementById('dataView').hidden = true;
+
+            createHeaderDaily();
+            document.getElementById('use-tBody').innerHTML = "";
+
+            $.ajax({
+                dataType: 'json',
+                type: "GET",
+                url: '{{ env('APP_URL') }}' + "/api/report/ledger-daily/" + document.getElementById('date_from').value + "/" + document.getElementById('opt').value,
+
+                beforeSend: function() {
+                    setButton();
+                },
+                complete: function() {
+                    setButton();
+                },
+                success: function(res) {      
+                    if (res.length > 0) {  
+                        // fill table *******************
+                        var grandtotal = 0;
+                        const totalcol = new Array(32).fill(0);// [];
+                        
+                        for (let index = 0; index < res.length; index++) {    
+                            var grandtotal_col = 0;
+                            var html = 
+                                '<tr class="rowCount" id="rowCount_' + index + '" name="rowCount_' + index + '">';
+
+                                html += '<th class="text-center">' + res[index]['code'] + '</th>';                                               
+
+                                html += '<th class="text-left">' + res[index]['name'] + ' (' + res[index]['description'] +')</th>';                                               
+
+                                html += '<th class="text-right">0</th>';
+
+                                for (let idate = 1; idate <= 31; idate++) {
+                                    if (parseFloat(res[index]['amount' + idate]) == 0) {
+                                        html += '<th class="text-right"></th>';
+                                    }
+                                    else {
+                                        html += '<th class="text-right">' + formatNumber(res[index]['amount' + idate], 0) + '</th>';
+                                    }
+
+                                    totalcol[idate] += parseFloat(res[index]['amount' + idate]);
+                                    grandtotal_col += parseFloat(res[index]['amount' + idate]); 
+                                }    
+
+                            $('#use-tBody').append(html);    
+
+                            // set grandtotal col
+                            grandtotal += parseFloat(grandtotal_col); 
+                            if (parseFloat(grandtotal_col) == 0) {
+                                document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML = '';
+                            }
+                            else {
+                                if (parseFloat(grandtotal_col) < 0) {
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML = formatNumber(grandtotal_col, 0);
+
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].classList.add("text-danger");
+                                } else {
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML = formatNumber(grandtotal_col, 0);
+                                }
+                            }
+
+                            document.getElementById("tblReport").rows[index + 1].cells[2].style.backgroundColor="#feffe6";
+                        }  
+                        
+                        //add row grand total
+                        var html = 
+                            '<tr class="rowCount" id="rowCount_grandtotal" name="rowCount_grandtotal" style="background-color: #f0f0f0">';
+
+                            html += '<th class="text-center" colspan=2>Grand Total</th>'; 
+                            if (parseFloat(grandtotal) == 0) {
+                                html += '<th class="text-right" style="background-color: #fff8c5"></th>';
+                            } else if (parseFloat(grandtotal) < 0) {
+                                html += '<th class="text-right text-danger" style="background-color: #fff8c5">' + formatNumber(grandtotal, 0) + '</th>';
+                            } else {
+                                html += '<th class="text-right" style="background-color: #fff8c5">' + formatNumber(grandtotal, 0) + '</th>';
+                            }                                              
+
+                            for (let idate = 1; idate <= 31; idate++) {
+                                if (parseFloat(totalcol[idate]) == 0) {
+                                    html += '<th class="text-right"></th>';
+                                }
+                                else if (parseFloat(totalcol[idate]) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(totalcol[idate], 0) +'</th>';
+                                } else {
+                                    html += '<th class="text-right">' + formatNumber(totalcol[idate], 0) +'</th>';
+                                }
+                            }    
+
+                            // console.log(totalcol);
+                        $('#use-tBody').append(html);                         
+                    }  else {
+                        $("#use-tBody").append(
+                            '<tr>' +
+                                '<td colspan=34>' +
+                                    '<h2 class="p-3 text-secondary">No have data</h2>' +
+                                '</td>' +
+                            '</tr>'
+                        );           
+                    }                  
+                },
+                error: function(xhr, status, error) {
+                    alert('Error API connection');
+                    document.getElementById('dataView').hidden = true;
+                    return;
+                }
+            });
+        }
+             
+        
+
+
+
+
+
+
+
+
+
+
+
         function formatNumber(amount, decimalCount = 2, decimal = ".", thousands = ",") {
             try {
                 decimalCount = Math.abs(decimalCount);
@@ -230,5 +423,30 @@
                 console.log(e)
             }
         };
+
+        function formatDate(date, options, separator) {
+            function format(option) {
+                let formatter = new Intl.DateTimeFormat('en', option);
+                if (formatter.format(date).length <= 2) {
+                    formatter = String(formatter.format(date)).padStart(2, '0')
+                } else {
+                    formatter = formatter.format(date)
+                }
+
+                return formatter;
+            }
+            return options.map(format).join(separator);
+        }  
+        
+        function isWeekEnd (date) {
+            // Check if the day of the week is Saturday (6) or Sunday (0)
+            if (date.getDay() == 6) {
+                return "Saturday";
+            }
+
+            if (date.getDay() == 0) {
+                return "Sunday";
+            }
+        }           
     </script>
 @endsection
