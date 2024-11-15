@@ -26,6 +26,7 @@ Route::prefix('report')->group(function () {
     Route::get('accounting/{fromDate}/{toDate}', [App\Http\Controllers\API\ReportAPIController::class, 'accounting']);
     Route::get('ledger/{fromDate}/{toDate}/{opt}', [App\Http\Controllers\API\ReportAPIController::class, 'ledger']);
     Route::get('ledger-daily/{fromDate}/{opt}', [App\Http\Controllers\API\ReportAPIController::class, 'ledgerDaily']);
+    Route::get('ledger-monthly/{fromDate}/{opt}', [App\Http\Controllers\API\ReportAPIController::class, 'ledgerMonthly']);
 });
 
 Route::prefix('content')->group(function () {
