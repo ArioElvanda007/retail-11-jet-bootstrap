@@ -56,6 +56,7 @@
                                     <option value="1" selected>Sum</option>
                                     <option value="2">Daily</option>
                                     <option value="3">Monthly</option>
+                                    <option value="4">Yearly</option>
                                 </select>
                             </div>
 
@@ -141,6 +142,8 @@
                 showDaily();
             } else if (document.getElementById('type').value == 3) {
                 showMonthly();
+            } else if (document.getElementById('type').value == 4) {
+                showYearly();
             }
         }
 
@@ -277,7 +280,7 @@
                 const formatter = new Intl.DateTimeFormat('en', { month: 'short' });
                 const month = formatter.format(new Date(dt));
                 const formatter2 = new Intl.DateTimeFormat('en', { day: 'numeric' });
-                const day = formatter2.format(new Date(dt));
+                const day = formatter2.format(new Date(dt)).padStart(2, '0');
 
                 if (isWeekEnd(dt) == 'Saturday') {
                     html += '<th class="text-center" style="background-color: #b9dcfd">' + day + '-' + month + '</th>';
@@ -335,6 +338,9 @@
                             for (let idate = 1; idate <= 31; idate++) {
                                 if (parseFloat(res[index]['amount' + idate]) == 0) {
                                     html += '<th class="text-right"></th>';
+                                } else if (parseFloat(res[index]['amount' + idate]) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['amount' +
+                                        idate], 0) + '</th>';
                                 } else {
                                     html += '<th class="text-right">' + formatNumber(res[index]['amount' +
                                         idate], 0) + '</th>';
@@ -489,6 +495,9 @@
                             for (let idate = 1; idate <= 12; idate++) {
                                 if (parseFloat(res[index]['amount' + idate]) == 0) {
                                     html += '<th class="text-right"></th>';
+                                } else if (parseFloat(res[index]['amount' + idate]) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['amount' +
+                                        idate], 0) + '</th>';
                                 } else {
                                     html += '<th class="text-right">' + formatNumber(res[index]['amount' +
                                         idate], 0) + '</th>';
@@ -566,6 +575,160 @@
                 }
             });
         }
+
+
+
+
+
+
+
+
+
+
+
+        function createHeaderYearly() {
+            document.getElementById('use-tThead').innerHTML = "";
+
+            var html =
+                '<tr class="text-center" style="background-color: #f0f0f0">' +
+                '<th>Account</th>' +
+                '<th class="w-full">Description</th>' +
+                '<th style="background-color: #fff8c5">Total</th>';
+
+            for (let index = 0; index < 12; index++) {
+                var dt = new Date(document.getElementById('date_from').value);
+                dt.setFullYear(dt.getFullYear() + index);
+                let year = dt.getFullYear();
+
+                html += '<th class="text-center">' + year + '</th>';
+            }
+
+            html += '</tr>';
+
+            $('#use-tThead').append(html);
+        }
+
+        function showYearly() {
+            document.getElementById('dataView').hidden = true;
+
+            createHeaderYearly();
+            document.getElementById('use-tBody').innerHTML = "";
+
+            $.ajax({
+                dataType: 'json',
+                type: "GET",
+                url: '{{ env('APP_URL') }}' + "/api/report/ledger-yearly/" + document.getElementById('date_from')
+                    .value + "/" + document.getElementById('opt').value,
+
+                beforeSend: function() {
+                    setButton();
+                },
+                complete: function() {
+                    setButton();
+                },
+                success: function(res) {
+                    if (res.length > 0) {
+                        // fill table *******************
+                        var grandtotal = 0;
+                        const totalcol = new Array(13).fill(0); // [];
+
+                        for (let index = 0; index < res.length; index++) {
+                            var grandtotal_col = 0;
+                            var html =
+                                '<tr class="rowCount" id="rowCount_' + index + '" name="rowCount_' + index +
+                                '">';
+
+                            html += '<th class="text-center">' + res[index]['code'] + '</th>';
+
+                            html += '<th class="text-left">' + res[index]['name'] + ' (' + res[index][
+                                'description'
+                            ] + ')</th>';
+
+                            html += '<th class="text-right">0</th>';
+
+                            for (let idate = 1; idate <= 12; idate++) {
+                                if (parseFloat(res[index]['amount' + idate]) == 0) {
+                                    html += '<th class="text-right"></th>';
+                                } else if (parseFloat(res[index]['amount' + idate]) < 0) {
+                                    html += '<th class="text-right text-danger">' + formatNumber(res[index]['amount' +
+                                        idate], 0) + '</th>';
+                                } else {
+                                    html += '<th class="text-right">' + formatNumber(res[index]['amount' +
+                                        idate], 0) + '</th>';
+                                }
+
+                                totalcol[idate] += parseFloat(res[index]['amount' + idate]);
+                                grandtotal_col += parseFloat(res[index]['amount' + idate]);
+                            }
+
+                            $('#use-tBody').append(html);
+
+                            // set grandtotal col
+                            grandtotal += parseFloat(grandtotal_col);
+                            if (parseFloat(grandtotal_col) == 0) {
+                                document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML = '';
+                            } else {
+                                if (parseFloat(grandtotal_col) < 0) {
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML =
+                                        formatNumber(grandtotal_col, 0);
+
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].classList.add(
+                                        "text-danger");
+                                } else {
+                                    document.getElementById("tblReport").rows[index + 1].cells[2].innerHTML =
+                                        formatNumber(grandtotal_col, 0);
+                                }
+                            }
+
+                            document.getElementById("tblReport").rows[index + 1].cells[2].style
+                                .backgroundColor = "#feffe6";
+                        }
+
+                        //add row grand total
+                        var html =
+                            '<tr class="rowCount" id="rowCount_grandtotal" name="rowCount_grandtotal" style="background-color: #f0f0f0">';
+
+                        html += '<th class="text-center" colspan=2>Grand Total</th>';
+                        if (parseFloat(grandtotal) == 0) {
+                            html += '<th class="text-right" style="background-color: #fff8c5"></th>';
+                        } else if (parseFloat(grandtotal) < 0) {
+                            html += '<th class="text-right text-danger" style="background-color: #fff8c5">' +
+                                formatNumber(grandtotal, 0) + '</th>';
+                        } else {
+                            html += '<th class="text-right" style="background-color: #fff8c5">' + formatNumber(
+                                grandtotal, 0) + '</th>';
+                        }
+
+                        for (let idate = 1; idate <= 12; idate++) {
+                            if (parseFloat(totalcol[idate]) == 0) {
+                                html += '<th class="text-right"></th>';
+                            } else if (parseFloat(totalcol[idate]) < 0) {
+                                html += '<th class="text-right text-danger">' + formatNumber(totalcol[idate],
+                                    0) + '</th>';
+                            } else {
+                                html += '<th class="text-right">' + formatNumber(totalcol[idate], 0) + '</th>';
+                            }
+                        }
+
+                        // console.log(totalcol);
+                        $('#use-tBody').append(html);
+                    } else {
+                        $("#use-tBody").append(
+                            '<tr>' +
+                            '<td colspan=15>' +
+                            '<h2 class="p-3 text-secondary">No have data</h2>' +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error API connection');
+                    document.getElementById('dataView').hidden = true;
+                    return;
+                }
+            });
+        }        
 
 
 

@@ -12,16 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::unprepared('DROP PROCEDURE IF EXISTS spReportLedger_Monthly;');
-        DB::unprepared("CREATE PROCEDURE spReportLedger_Monthly (IN fromDate DATE, IN opt integer)
+        DB::unprepared('DROP PROCEDURE IF EXISTS spReportLedger_Yearly;');
+        DB::unprepared("CREATE PROCEDURE spReportLedger_Yearly (IN fromDate DATE, IN opt integer)
         BEGIN    
             DECLARE toDate DATE;
             SET fromDate = DATE_FORMAT(fromDate,'%y-%m-%1'); -- set first day of month
-            SET toDate = LAST_DAY(DATE_ADD(fromDate, INTERVAL 11 MONTH)); -- set last day of month
-            
+            SET toDate = LAST_DAY(DATE_FORMAT(DATE_ADD(fromDate, INTERVAL 11 YEAR),'%y-%m-%1')); -- set last day of month
+
             -- from cashflows
-            DROP TEMPORARY TABLE IF EXISTS tempReportLedger_Monthly;
-            CREATE TEMPORARY TABLE tempReportLedger_Monthly
+            DROP TEMPORARY TABLE IF EXISTS tempReportLedger_Yearly;
+            CREATE TEMPORARY TABLE tempReportLedger_Yearly
             SELECT 
                 A.date_input, B.id, B.seq, B.code, B.name, B.description, B.position, -- IFNULL(SUM(A.debet), 0) AS debet, IFNULL(SUM(A.credit), 0) AS credit, 0 AS balance
                 IFNULL(SUM(A.debet), 0) - IFNULL(SUM(A.credit), 0) AS amount    
@@ -105,22 +105,22 @@ return new class extends Migration
                     
             SELECT 
                 A.id, A.seq, A.code, A.name, A.description, A.position,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 0 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 0 MONTH)) THEN B.amount ELSE 0 END) AS amount1,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 1 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 1 MONTH)) THEN B.amount ELSE 0 END) AS amount2,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 2 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 2 MONTH)) THEN B.amount ELSE 0 END) AS amount3,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 3 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 3 MONTH)) THEN B.amount ELSE 0 END) AS amount4,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 4 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 4 MONTH)) THEN B.amount ELSE 0 END) AS amount5,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 5 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 5 MONTH)) THEN B.amount ELSE 0 END) AS amount6,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 6 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 6 MONTH)) THEN B.amount ELSE 0 END) AS amount7,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 7 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 7 MONTH)) THEN B.amount ELSE 0 END) AS amount8,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 8 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 8 MONTH)) THEN B.amount ELSE 0 END) AS amount9,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 9 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 9 MONTH)) THEN B.amount ELSE 0 END) AS amount10,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 10 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 10 MONTH)) THEN B.amount ELSE 0 END) AS amount11,
-                SUM(CASE WHEN MONTH(B.date_input) = MONTH(DATE_ADD(fromDate, INTERVAL 11 MONTH)) AND YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 11 MONTH)) THEN B.amount ELSE 0 END) AS amount12
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 0 YEAR)) THEN B.amount ELSE 0 END) AS amount1,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 1 YEAR)) THEN B.amount ELSE 0 END) AS amount2,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 2 YEAR)) THEN B.amount ELSE 0 END) AS amount3,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 3 YEAR)) THEN B.amount ELSE 0 END) AS amount4,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 4 YEAR)) THEN B.amount ELSE 0 END) AS amount5,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 5 YEAR)) THEN B.amount ELSE 0 END) AS amount6,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 6 YEAR)) THEN B.amount ELSE 0 END) AS amount7,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 7 YEAR)) THEN B.amount ELSE 0 END) AS amount8,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 8 YEAR)) THEN B.amount ELSE 0 END) AS amount9,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 9 YEAR)) THEN B.amount ELSE 0 END) AS amount10,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 10 YEAR)) THEN B.amount ELSE 0 END) AS amount11,
+                SUM(CASE WHEN YEAR(B.date_input) = YEAR(DATE_ADD(fromDate, INTERVAL 11 YEAR)) THEN B.amount ELSE 0 END) AS amount12
             FROM 
                 accounts AS A
             LEFT OUTER JOIN
-                tempReportLedger_Monthly AS B ON A.id = B.id
+                tempReportLedger_Yearly AS B ON A.id = B.id
             WHERE 
                 CASE
                     WHEN opt = 1 THEN A.name IN (SELECT name FROM accounts GROUP BY name)
@@ -137,6 +137,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('spReportLedger_Monthly');
+        Schema::dropIfExists('spReportLedger_Yearly');
     }
 };
