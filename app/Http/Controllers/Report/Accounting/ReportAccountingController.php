@@ -24,7 +24,7 @@ class ReportAccountingController extends Controller
             ['link' => "report.accounting.index", 'name' => "Report Balance"]
         ];
 
-        $date_from = Carbon::now()->addDays(-31);
+        $date_from = Carbon::now()->addDays(-30);
         $date_to = Carbon::now();        
         return view('content.report.accounting.index', compact('date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);
     }  

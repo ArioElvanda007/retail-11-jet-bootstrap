@@ -50,7 +50,7 @@ class BuyingController extends Controller
             $date_from = date('Y-m-d', strtotime(Request::get('date_from')));
             $date_to = date('Y-m-d', strtotime(Request::get('date_to')));    
         } else {
-            $date_from = Carbon::now()->addDays(-31);
+            $date_from = Carbon::now()->addDays(-30);
             $date_to = Carbon::now();
         }
 

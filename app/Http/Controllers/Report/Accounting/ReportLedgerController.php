@@ -24,7 +24,7 @@ class ReportLedgerController extends Controller
             ['link' => "report.ledger.index", 'name' => "Report Ledger"]
         ];
 
-        $date_from = Carbon::now()->addDays(-31);
+        $date_from = Carbon::now()->addDays(-30);
         $date_to = Carbon::now();        
         return view('content.report.ledger.index', compact('date_from', 'date_to'), ['breadcrumbs' => $breadcrumbs]);
     }  
