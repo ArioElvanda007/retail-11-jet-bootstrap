@@ -109,6 +109,10 @@
                                 </span>
                                 
                                 <span class="mr-4">
+                                    <i class="fas fa-square text-warning"></i> COGS
+                                </span>
+
+                                <span class="mr-4">
                                     <i class="fas fa-square text-danger"></i> Cashflow
                                 </span>
 
@@ -188,6 +192,19 @@
         var saleSPCMonthly10 = chartSPCMonthly[0]['data_10']; 
         var saleSPCMonthly11 = chartSPCMonthly[0]['data_11']; 
         var saleSPCMonthly12 = chartSPCMonthly[0]['data_12']; 
+
+        var COGSSPCMonthly1 = chartSPCMonthly[1]['data_1']; 
+        var COGSSPCMonthly2 = chartSPCMonthly[1]['data_2']; 
+        var COGSSPCMonthly3 = chartSPCMonthly[1]['data_3']; 
+        var COGSSPCMonthly4 = chartSPCMonthly[1]['data_4']; 
+        var COGSSPCMonthly5 = chartSPCMonthly[1]['data_5']; 
+        var COGSSPCMonthly6 = chartSPCMonthly[1]['data_6']; 
+        var COGSSPCMonthly7 = chartSPCMonthly[1]['data_7']; 
+        var COGSSPCMonthly8 = chartSPCMonthly[1]['data_8']; 
+        var COGSSPCMonthly9 = chartSPCMonthly[1]['data_9']; 
+        var COGSSPCMonthly10 = chartSPCMonthly[1]['data_10']; 
+        var COGSSPCMonthly11 = chartSPCMonthly[1]['data_11']; 
+        var COGSSPCMonthly12 = chartSPCMonthly[1]['data_12']; 
         
         var cashflowSPCMonthly1 = chartSPCMonthly[2]['data_1']; 
         var cashflowSPCMonthly2 = chartSPCMonthly[2]['data_2']; 
@@ -202,18 +219,18 @@
         var cashflowSPCMonthly11 = chartSPCMonthly[2]['data_11']; 
         var cashflowSPCMonthly12 = chartSPCMonthly[2]['data_12']; 
 
-        var profitSPCMonthly1 = chartSPCMonthly[1]['data_1']; 
-        var profitSPCMonthly2 = chartSPCMonthly[1]['data_2']; 
-        var profitSPCMonthly3 = chartSPCMonthly[1]['data_3']; 
-        var profitSPCMonthly4 = chartSPCMonthly[1]['data_4']; 
-        var profitSPCMonthly5 = chartSPCMonthly[1]['data_5']; 
-        var profitSPCMonthly6 = chartSPCMonthly[1]['data_6']; 
-        var profitSPCMonthly7 = chartSPCMonthly[1]['data_7']; 
-        var profitSPCMonthly8 = chartSPCMonthly[1]['data_8']; 
-        var profitSPCMonthly9 = chartSPCMonthly[1]['data_9']; 
-        var profitSPCMonthly10 = chartSPCMonthly[1]['data_10']; 
-        var profitSPCMonthly11 = chartSPCMonthly[1]['data_11']; 
-        var profitSPCMonthly12 = chartSPCMonthly[1]['data_12']; 
+        var profitSPCMonthly1 = chartSPCMonthly[3]['data_1']; 
+        var profitSPCMonthly2 = chartSPCMonthly[3]['data_2']; 
+        var profitSPCMonthly3 = chartSPCMonthly[3]['data_3']; 
+        var profitSPCMonthly4 = chartSPCMonthly[3]['data_4']; 
+        var profitSPCMonthly5 = chartSPCMonthly[3]['data_5']; 
+        var profitSPCMonthly6 = chartSPCMonthly[3]['data_6']; 
+        var profitSPCMonthly7 = chartSPCMonthly[3]['data_7']; 
+        var profitSPCMonthly8 = chartSPCMonthly[3]['data_8']; 
+        var profitSPCMonthly9 = chartSPCMonthly[3]['data_9']; 
+        var profitSPCMonthly10 = chartSPCMonthly[3]['data_10']; 
+        var profitSPCMonthly11 = chartSPCMonthly[3]['data_11']; 
+        var profitSPCMonthly12 = chartSPCMonthly[3]['data_12']; 
                 
         lineSales();
         donutSales();
@@ -240,6 +257,15 @@
                             borderColor: '#007bff',
                             pointBorderColor: '#007bff',
                             pointBackgroundColor: '#007bff',
+                            fill: false
+                        },
+                        {
+                            type: 'line',
+                            data: [COGSSPCMonthly1, COGSSPCMonthly2, COGSSPCMonthly3, COGSSPCMonthly4, COGSSPCMonthly5, COGSSPCMonthly6, COGSSPCMonthly7, COGSSPCMonthly8, COGSSPCMonthly9, COGSSPCMonthly10, COGSSPCMonthly11, COGSSPCMonthly12],
+                            backgroundColor: 'tansparent',
+                            borderColor: '#e7ed5f',
+                            pointBorderColor: '#e7ed5f',
+                            pointBackgroundColor: '#e7ed5f',
                             fill: false
                         },
                         {
