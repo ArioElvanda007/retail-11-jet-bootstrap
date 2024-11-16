@@ -242,7 +242,7 @@ return new class extends Migration
 				cashflow_data_1, cashflow_data_2, cashflow_data_3, cashflow_data_4, cashflow_data_5, cashflow_data_6, cashflow_data_7, cashflow_data_8, cashflow_data_9, cashflow_data_10, cashflow_data_11, cashflow_data_12            
 			FROM tempData WHERE category = 'CASHFLOW';
 
-			UPDATE tempData SET data_1 = sales_data_1 - cogs_data_1 - cashflow_data_1, data_2 = sales_data_2 - cogs_data_2 - cashflow_data_2, data_3 = sales_data_3 - cogs_data_3 - cashflow_data_3, data_4 = sales_data_4 - cogs_data_4 - cashflow_data_4, data_5 = sales_data_5 - cogs_data_5 - cashflow_data_5, data_6 = sales_data_6 - cogs_data_6 - cashflow_data_6, data_7 = sales_data_7 - cogs_data_7 - cashflow_data_7, data_8 = sales_data_8 - cogs_data_8 - cashflow_data_8, data_9 = sales_data_9 - cogs_data_9 - cashflow_data_9, data_10 = sales_data_10 - cogs_data_10 - cashflow_data_10, data_1 = sales_data_11 - cogs_data_11 - cashflow_data_11, data_12 = sales_data_12 - cogs_data_12 - cashflow_data_12
+			UPDATE tempData SET data_1 = sales_data_1 - cogs_data_1 - cashflow_data_1, data_2 = sales_data_2 - cogs_data_2 - cashflow_data_2, data_3 = sales_data_3 - cogs_data_3 - cashflow_data_3, data_4 = sales_data_4 - cogs_data_4 - cashflow_data_4, data_5 = sales_data_5 - cogs_data_5 - cashflow_data_5, data_6 = sales_data_6 - cogs_data_6 - cashflow_data_6, data_7 = sales_data_7 - cogs_data_7 - cashflow_data_7, data_8 = sales_data_8 - cogs_data_8 - cashflow_data_8, data_9 = sales_data_9 - cogs_data_9 - cashflow_data_9, data_10 = sales_data_10 - cogs_data_10 - cashflow_data_10, data_11 = sales_data_11 - cogs_data_11 - cashflow_data_11, data_12 = sales_data_12 - cogs_data_12 - cashflow_data_12
 			WHERE category = 'CUAN';
 
 
