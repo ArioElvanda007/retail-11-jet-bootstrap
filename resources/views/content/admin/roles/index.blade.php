@@ -11,17 +11,7 @@
 
             <div class="card card-solid">
                 <div class="card-body">
-
-                    @if ($provider::access('roles')->access[0]->can_create == 1)
-                        <div class="mb-2 d-flex justify-content-start justify-content-md-end d-print-none">
-                            <button type="button" onclick='create()' class="btn btn-dark">
-                                <i class="fa fa-plus"></i>
-                                <span class="ms-2">Create</span>
-                            </button>
-                        </div>                            
-                    @endif
-
-                    <table id="example1" class="table table-bordered table-striped">
+                    <table id="example1" class="table table-sm table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>Role</th>
@@ -78,28 +68,75 @@
 @endsection
 
 @section('page-style')
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.css') }}">
+
+    <style>
+        button.colorCreate,
+        a.colorCreate {
+            color: white !important;
+            background-color: black !important;
+        },        
+    </style>       
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/dataTables.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/dataTables.buttons.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.bootstrap4.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
     <script>
         $("#example1").DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            pageLength: 100,
+            scrollY: true,
+            
+            buttons: [{
+                    text: '+ Create',
+                    className: 'colorCreate',
+                    action: function(e, dt, node, config) {
+                        create();
+                    }
+                },
+                'pageLength',
+                {
+                    extend: 'collection',
+                    text: 'Control',
+                    buttons: [
+                        'copy', 'excel', 'print',
+                        {
+                            text: 'Visibility',
+                            popoverTitle: 'Control',
+                            extend: 'colvis',
+                            collectionLayout: 'two-column',
+                            postfixButtons: ['colvisRestore']
+                        }
+                    ]
+                }           
+            ],
+            layout: {
+                topStart: ['buttons']
+            }
+        }); 
 
         function create() {
+            var can_access = {!! json_encode($provider::access('roles')->access[0]->can_create) !!};
+            if (can_access == 0) {
+                alert("Access denied");
+                return;
+            }
+
             window.location.href = "{{ route('admin.roles.create') }}";
         }
     </script>

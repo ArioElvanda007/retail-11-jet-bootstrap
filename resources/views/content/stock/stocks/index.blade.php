@@ -126,8 +126,9 @@
 @endsection
 
 @section('page-style')
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.css') }}">
+
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 
     <!-- / datetimepicker -->
@@ -135,10 +136,15 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/dataTables.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/dataTables.buttons.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.bootstrap4.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <!-- / datetimepicker -->
@@ -155,14 +161,37 @@
         });
 
         $("#example1").DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            pageLength: 100,
+            scrollY: true,
+            
+            buttons: [
+                'pageLength',
+                {
+                    extend: 'collection',
+                    text: 'Control',
+                    buttons: [
+                        'copy', 'excel', 'print',
+                        {
+                            text: 'Visibility',
+                            popoverTitle: 'Control',
+                            extend: 'colvis',
+                            collectionLayout: 'two-column',
+                            postfixButtons: ['colvisRestore']
+                        }
+                    ]
+                }           
+            ],
+            layout: {
+                topStart: ['buttons']
+            }
+        });   
 
         function create() {
             window.location.href = "{{ route('stock.stocks.create') }}";

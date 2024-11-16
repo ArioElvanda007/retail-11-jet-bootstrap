@@ -53,7 +53,7 @@
 
 
                         <!--transaksi -->
-                        <table class="table table-bordered table-striped table-responsive text-nowrap table-sm mt-2">
+                        <table class="table table-bordered table-striped table-sm mt-2">
                             <thead>
                                 <tr>
                                     <th scope="col" hidden>StockID</th>
